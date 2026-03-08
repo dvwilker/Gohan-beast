@@ -46,7 +46,7 @@ const handler = async (m, { conn, text }) => {
     }
 
     const caption = `
-  ✧━─『 𝙸𝙽𝙵𝙾 𝙳𝙴𝙻 𝙰𝚄𝙳𝙸𝙾 』─━✧
+  ✧━『 𝙸𝙽𝙵𝙾 𝙳𝙴𝙻 𝙰𝚄𝙳𝙸𝙾 』━✧
 
 🎼 𝚃𝙸𝚃𝚄𝙻𝙾: ${title}
 📺 𝙲𝙰𝙽𝙰𝙻: ${authorName}
@@ -54,7 +54,7 @@ const handler = async (m, { conn, text }) => {
 ⏳ 𝙳𝚄𝚁𝙰𝙲𝙸𝙾𝙽: ${durationTimestamp}
 🌐 𝙴𝙽𝙻𝙰𝙲𝙴: ${url}
 
-✧━──『 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 𝙱𝙾𝚃 』──━✧
+  ✧━『 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 𝙱𝙾𝚃 』━✧
      🐉 𝙿𝙾𝚆𝙴𝚁𝙴 𝙱𝚈 𝚆𝙸𝙻𝙺𝙴𝚁 🐉
 `
 
