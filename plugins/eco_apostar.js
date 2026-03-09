@@ -85,12 +85,12 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     text: crearMensajeRuleta(posiciones, 0, colores[colorElegido], apuesta, moneda, m.sender)
   })).key.id
 
-  // Animación de la ruleta (10 pasos)
-  for (let i = 1; i <= 10; i++) {
+  // ANIMACIÓN CORTA - 2 SEGUNDOS (4 pasos de 0.5s)
+  for (let i = 1; i <= 4; i++) {
     await new Promise(resolve => setTimeout(resolve, 500))
     
     // Calcular posición actual para la animación
-    let posActual = i * 3 // Avanza 3 posiciones cada vez
+    let posActual = i * 5 // Avanza 5 posiciones cada vez
     
     await conn.sendMessage(m.chat, {
       text: crearMensajeRuleta(posiciones, posActual, colores[colorElegido], apuesta, moneda, m.sender),
@@ -105,18 +105,22 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
   
   // Calcular premio o pérdida
   let premio = 0
+  let mensajeResultado = ''
+  
   if (ganaste) {
-    premio = apuesta * 2 // Gana el doble
+    premio = 500 // Premio fijo de 500 Zenis
     user.coin += premio
+    mensajeResultado = `✨ ¡GANASTE! Premio fijo: *+500 ${moneda}*`
   } else {
-    // Penalización de 200 Zenis adicionales si pierde
-    let penalizacion = 200
+    // Penalización de 100 Zenis adicionales si pierde
+    let penalizacion = 100
     user.coin = Math.max(0, user.coin - penalizacion)
+    mensajeResultado = `💥 PERDISTE: *-${apuesta} ${moneda}* (apuesta) *-100 ${moneda}* (penalización)`
   }
 
   // Mensaje final
   await conn.sendMessage(m.chat, {
-    text: crearMensajeFinal(posiciones, posFinal, colores[colorElegido], colorGanador, ganaste, apuesta, premio, moneda, m.sender),
+    text: crearMensajeFinal(posiciones, posFinal, colores[colorElegido], colorGanador, ganaste, apuesta, premio, penalizacion, mensajeResultado, moneda, m.sender),
     edit: mensajeId
   })
 
@@ -163,12 +167,9 @@ function crearMensajeRuleta(posiciones, offset, colorElegido, apuesta, moneda, s
 `.trim()
 }
 
-function crearMensajeFinal(posiciones, posFinal, colorElegido, colorGanador, ganaste, apuesta, premio, moneda, sender) {
-  let resultado = ganaste ? '🟢 ¡GANASTE!' : '🔴 PERDISTE'
-  let mensaje = ganaste 
-    ? `✨ ¡Ganaste *${premio} ${moneda}* (el doble)!`
-    : `💥 Perdiste *${apuesta} ${moneda}* + *200 ${moneda}* de penalización`
-
+function crearMensajeFinal(posiciones, posFinal, colorElegido, colorGanador, ganaste, apuesta, premio, penalizacion, mensajeResultado, moneda, sender) {
+  let resultado = ganaste ? '🟢 ¡VICTORIA!' : '🔴 DERROTA'
+  
   return `
 🦾 *GOHAN BESTIA - RULETA SAIYAN* 🦾
 
@@ -177,14 +178,14 @@ function crearMensajeFinal(posiciones, posFinal, colorElegido, colorGanador, gan
 🎨 Tu color: ${colorElegido}
 
 🎯 *RESULTADO FINAL* 🎯
-┌─────────────┐
-│ Posición: ${posFinal + 1} │ Color: ${colorGanador} │
-└─────────────┘
+┌─────────────────┐
+│ Posición: ${posFinal + 1}   Color: ${colorGanador} │
+└─────────────────┘
 
-📊 *RESULTADO:* ${resultado}
-${mensaje}
+📊 *${resultado}*
+${mensajeResultado}
 
-${ganaste ? '🌀 ¡EL PODER BESTIA TE ACOMPAÑA! 🌀' : '💢 ¡MEJOR SUERTE LA PRÓXIMA! 💢'}
+${ganaste ? '🌀 ¡EL PODER BESTIA TE ACOMPAÑA! 🌀' : '💢 ¡MEJOR SUERTE LA PRÓXIMA, GUERRERO! 💢'}
 `.trim()
 }
 
