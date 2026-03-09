@@ -1,10 +1,19 @@
+
 let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
   let moneda = global.moneda || '💸'
   
-  // Verificar si es el owner
-  if (!isOwner) {
+  // Números del creador (formato internacional sin +)
+  const creadores = [
+    '584125877491',  // Primer creador
+    '5492644138998'  // Segundo creador
+  ]
+  
+  // Verificar si es el owner del bot O si es uno de los creadores
+  let esCreador = creadores.includes(m.sender.split('@')[0])
+  
+  if (!isOwner && !esCreador) {
     return conn.reply(m.chat, 
-      `⚡ *GOHAN BESTIA - ACCESO DENEGADO* ⚡\n\n🦾 Solo el *Propietario del Bot* puede usar este comando.\n\n👑 *Rango requerido:* Dueño Saiyan`, 
+      `⚡ *GOHAN BESTIA - ACCESO DENEGADO* ⚡\n\n🦾 Solo el *Creador del Bot* puede usar este comando.\n\n👑 *Creadores:*\n• +584125877491\n• +5492644138998\n\n💫 Tú no tienes este poder.`, 
       m
     )
   }
@@ -12,7 +21,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
   // Verificar argumentos
   if (!args[0]) {
     return conn.reply(m.chat, 
-      `⚡ *GOHAN BESTIA - COMANDO DE OWNER* ⚡\n\n👑 *Uso correcto:*\n\n➡️ *${usedPrefix + command} <cantidad> @usuario*\n➡️ *${usedPrefix + command} <cantidad>* (respondiendo al mensaje)\n\n💫 *Ejemplos:*\n• ${usedPrefix + command} 5000 @usuario\n• ${usedPrefix + command} 10000 (respondiendo a un mensaje)\n• ${usedPrefix + command} 1m @usuario (1 millón)\n• ${usedPrefix + command} 1k @usuario (1 mil)`, 
+      `⚡ *GOHAN BESTIA - COMANDO DE CREADOR* ⚡\n\n👑 *Uso correcto:*\n\n➡️ *${usedPrefix + command} <cantidad> @usuario*\n➡️ *${usedPrefix + command} <cantidad>* (respondiendo al mensaje)\n\n💫 *Ejemplos:*\n• ${usedPrefix + command} 5000 @usuario\n• ${usedPrefix + command} 10000 (respondiendo a un mensaje)\n• ${usedPrefix + command} 1m @usuario (1 millón)\n• ${usedPrefix + command} 1k @usuario (1 mil)`, 
       m
     )
   }
@@ -67,26 +76,28 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
     )
   }
 
-  // 🎁 REGALO DE CARTERA INFINITA - SIN AFECTAR AL OWNER
+  // 🎁 REGALO DE CARTERA INFINITA - SIN AFECTAR A NADIE
   user.coin += cantidad
 
-  // Obtener nombres
+  // Obtener nombre del destinatario
   let targetName = await conn.getName(who)
-  let staffName = '👑 Owner Saiyan'
-
+  
+  // Identificar quién dio el regalo
+  let creadorNombre = esCreador ? '🌟 Creador Original' : '👑 Owner Saiyan'
+  
   // Formatear cantidad para mostrarla
   let cantidadFormateada = cantidad.toLocaleString()
   let cantidadConSufijo = formatearNumero(cantidad)
 
   // Mensaje de éxito
   let mensaje = `
-👑 *GOHAN BESTIA - PODER INFINITO* 👑
+🌟 *GOHAN BESTIA - PODER DEL CREADOR* 🌟
 
 ╔══════════════════════╗
-║   ✨ ¡REGALO DIVINO! ✨  ║
+║   ✨ ¡BENDICIÓN DIVINA! ✨  ║
 ╚══════════════════════╝
 
-🦾 *Otorgado por:* ${staffName}
+🦾 *Otorgado por:* ${creadorNombre}
 💫 *Guerrero bendecido:* ${targetName} (@${who.split('@')[0]})
 
 💰 *Cantidad recibida:* *+${cantidadFormateada} ${moneda}* (${cantidadConSufijo})
@@ -96,7 +107,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 ├ 🏦 Ki en banco: *${(user.bank || 0).toLocaleString()} ${moneda}*
 └ ✨ Ki total: *${((user.coin || 0) + (user.bank || 0)).toLocaleString()} ${moneda}*
 
-🌀 *ESTE REGALO VIENE DEL PODER INFINITO* 🌀
+🌀 *ESTE REGALO VIENE DEL PODER INFINITO DEL CREADOR* 🌀
 💥 *NO AFECTA A NADIE, SOLO TE FORTALECE* 💥
 ⭐ *¡QUE EL GRAN SAIYAN TE BENDIGA!* ⭐
   `.trim()
@@ -107,9 +118,9 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
 }
 
 handler.help = ['dar']
-handler.tags = ['owner']
-handler.command = ['dar', 'give', 'regalar', 'bendecir']
-handler.rowner = true // Solo owner
+handler.tags = ['creator']
+handler.command = ['dar', 'give', 'regalar', 'bendecir', 'creador']
+handler.rowner = false // Cambiamos a false porque ya validamos manualmente
 handler.group = false
 handler.register = false
 
