@@ -12,7 +12,7 @@ let handler = async (m, { conn }) => {
   let coal = pickRandom([500, 600, 700, 800, 1000, 1200, 1500, 2000])
   let stone = pickRandom([2000, 3000, 4000, 5000, 6000, 7000, 8000, 10000])
 
-  let img = 'https://d.uguu.se/JwljtGzp.jpg' // Cambia esta imagen por una de Gohan Bestia si quieres
+  let img = 'https://tmpfiles.org/dl/28330383/1773179039039.jpg' // Cambia esta imagen por una de Gohan Bestia si quieres
   let cooldownTime = 600000
   let now = Date.now()
   let nextMine = (user.lastmiming || 0) + cooldownTime
