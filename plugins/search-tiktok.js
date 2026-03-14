@@ -49,7 +49,7 @@ async function ttks(query) {
   try {
     const response = await axios({
       method: 'POST',
-      url: 'https://tikwm.com/api/feed/search',
+      url: 'https://api-gohan.onrender.com/busqueda/tiktok',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Cookie': 'current_language=en',
