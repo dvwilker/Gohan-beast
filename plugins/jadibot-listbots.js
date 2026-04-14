@@ -46,7 +46,7 @@ let handler = async (m, { conn }) => {
 
 handler.command = ['listjadibot', 'bots']
 handler.help = ['bots']
-handler.tags = ['serbot']
+handler.tags = ['jadibot']
 handler.register = false
 export default handler
 
