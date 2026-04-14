@@ -110,7 +110,7 @@ printQRInTerminal: false,
 auth: { creds: state.creds, keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'})) },
 msgRetry,
 msgRetryCache,
-browser: mcode ? ['Ubuntu', 'MacOS', '110.0.5585.95'] : ['Michi Wa [ Prem Bot ]', 'MacOS', '2.0.0'],
+browser: mcode ? ['Ubuntu', 'Chrome', '110.0.5585.95'] : ['Michi Wa [ Prem Bot ]','Chrome','2.0.0'],
 version: version,
 generateHighQualityLinkPreview: true
 };
@@ -277,5 +277,4 @@ return minutes + ' m y ' + seconds + ' s '
 async function joinChannels(conn) {
 for (const channelId of Object.values(global.ch)) {
 await conn.newsletterFollow(channelId).catch(() => {})
-}
-}
+}}
