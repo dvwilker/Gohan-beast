@@ -4,7 +4,7 @@ import { xpRange } from '../lib/levelling.js'
 
 // Categorías con temática Gohan Beast uwu
 const tags = {
-  Subbots: '🐉 SUBBOTS',
+  jadibot: '🐉 SUBBOTS',
   eco: '⚡ ENERGÍA SAIYAN',
   descargas: '🌀 DESCARGAS',
   tools: '🔧 HERRAMIENTAS',
