@@ -27,9 +27,7 @@
   "dependencies": {
     "@bochilteam/scraper": "^4.0.0",
     "@hapi/boom": "^10.0.1",
-    "@StarlightsTeam/Scraper": "github:Ado926/Starlights-Scraper",
-    "@whiskeysockets/baileys": "npm:angularsockets",
-    "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
+    "@whiskeysockets/baileys": "github:dvwilker/WaBail",
     "ruhend-scraper": "*",
     "awesome-phonenumber": "^3.4.0",
     "axios": "^1.1.2",
@@ -81,7 +79,6 @@
     "ws": "^8.17.1",
     "yargs": "^17.6.0",
     "yt-search": "^2.10.3",
-    "lurcloud": "github:AzamiJs/lurcloud"
   },
   "optionalDependencies": {
     "moment-timezone": "^0.5.45"
