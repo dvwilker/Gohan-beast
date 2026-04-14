@@ -1,55 +1,59 @@
-// === COMANDO .LIST O .LISTSUBBOTS ===
-const listSubbotsHandler = async (m, { conn }) => {
-  // Filtrar subbots conectados (excluyendo el bot principal)
-  const subBots = global.conns.filter((subbot) => {
-    return subbot && 
-           subbot.user && 
-           subbot.ws && 
-           subbot.ws.socket && 
-           subbot.ws.socket.readyState === ws.OPEN &&
-           subbot.user.jid !== conn.user.jid // Excluir el bot principal
-  })
-  
-  if (subBots.length === 0) {
-    return await conn.sendMessage(m.chat, {
-      text: `📭 *No hay subbots conectados*\n\nUsa *.qr* o *.code* para conectar un subbot.`
-    })
+import ws from 'ws'
+
+let handler = async (m, { conn }) => {
+  let uniqueUsers = new Map()
+
+  if (!global.conns || !Array.isArray(global.conns)) global.conns = []
+
+  for (const connSub of global.conns) {
+    if (connSub.user && connSub.ws?.socket?.readyState !== ws.CLOSED) {
+      const jid = connSub.user.jid
+      const numero = jid?.split('@')[0]
+      let nombre = connSub.user.name
+      if (!nombre && typeof conn.getName === 'function') {
+        try {
+          nombre = await conn.getName(jid)
+        } catch {
+          nombre = `Usuario ${numero}`
+        }
+      }
+      uniqueUsers.set(jid, nombre || `Usuario ${numero}`)
+    }
   }
-  
-  let message = `╭━━━〔 *SUBBOTS CONECTADOS* 〕━━━┈ 🤖\n┃\n`
-  message += `┃ 📊 *Total:* ${subBots.length} subbots\n┃\n`
-  
-  subBots.forEach((subbot, index) => {
-    const name = subbot.user.name || 'Desconocido'
-    const jid = subbot.user.jid || 'N/A'
-    const number = jid.split('@')[0]
-    const connectedAt = subbot.connectedAt || new Date().toLocaleString()
-    
-    message += `┃ ${index + 1}. 🤖 *${name}*\n`
-    message += `┃    📱 *Número:* ${number}\n`
-    message += `┃    🆔 *JID:* ${jid}\n`
-    message += `┃    ⏰ *Conectado:* ${connectedAt}\n`
-    message += `┃\n`
-  })
-  
-  message += `╰━━━━━━━━━━━━━━━━━━━━━━━━━┈ 🔗\n\n`
-  message += `📌 *Comandos útiles:*\n`
-  message += `▢ *.qr* - Conectar nuevo subbot\n`
-  message += `▢ *.code* - Conectar con código\n`
-  message += `▢ *.remove <número>* - Eliminar subbot`
-  
-  await conn.sendMessage(m.chat, { text: message })
+
+  const uptime = process.uptime() * 1000
+  const formatUptime = clockString(uptime)
+  const totalUsers = uniqueUsers.size
+
+  let txt = `🐉 *SUBS SAIYANS ACTIVOS* 🐉\n\n`
+  txt += `🌀 *Tiempo Activo:* ${formatUptime}\n`
+  txt += `🐉 *Total Conectados:* ${totalUsers}\n`
+
+  if (totalUsers > 0) {
+    txt += `\n📋 *LISTA DE SUBS SAIYANS*\n\n`
+    let i = 1
+    for (const [jid, nombre] of uniqueUsers) {
+      const numero = jid.split('@')[0]
+      txt += `🌀 *${i++}.* ${nombre}\n`
+      txt += `🐉 https://wa.me/${numero}\n\n`
+    }
+  } else {
+    txt += `\n🌀 *No hay subbots conectados actualmente.*`
+  }
+
+  await conn.reply(m.chat, txt.trim(), m, global.rcanal)
 }
 
-// Agregar al handler principal
-const handler = async (m, { conn, command, args }) => {
-  switch(command) {
-    case 'list':
-    case 'listsubbots':
-      await listSubbotsHandler(m, { conn })
-      break
-    // ... otros casos
-  }
-}
+handler.command = ['listjadibot', 'bots']
+handler.help = ['bots']
+handler.tags = ['serbot']
+handler.register = false
+export default handler
 
-handler.command = ['list', 'listsubbots']
+function clockString(ms) {
+  const d = Math.floor(ms / 86400000)
+  const h = Math.floor(ms / 3600000) % 24
+  const m = Math.floor(ms / 60000) % 60
+  const s = Math.floor(ms / 1000) % 60
+  return `${d}d ${h}h ${m}m ${s}s`
+}
