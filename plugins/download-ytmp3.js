@@ -1,6 +1,9 @@
 import yts from "yt-search"
 import fetch from "node-fetch"
 
+const API_KEY = "GOHAN_wd38w1d453ah06arg"
+const API_BASE_URL = "https://api-gohan.onrender.com"
+
 const handler = async (m, { conn, text }) => {
   if (!text) return m.reply("🎶 Ingresa el nombre o enlace del video de YouTube.")
 
@@ -81,7 +84,7 @@ const handler = async (m, { conn, text }) => {
 👁️ _vistas_: ${vistas}
 ⏳ _duración_: ${durationTimestamp}
 🌐 _enlace_: ${url}
-📚 _api_ https://api-gohan.onrender.com
+📚 _api_ ${API_BASE_URL}
 
      ✧━『 _GOHAN BEAST_ 』━✧
     🐉 _Powered by wilker_ 🐉
@@ -123,7 +126,7 @@ const downloadMedia = async (conn, m, url, quotedMsg) => {
       { quoted: m }
     )
 
-    const apiUrl = `https://api-gohan.onrender.com/download/ytaudio?url=${encodeURIComponent(url)}`
+    const apiUrl = `${API_BASE_URL}/download/ytaudio?url=${encodeURIComponent(url)}&key=${API_KEY}`
     const r = await fetch(apiUrl)
 
     if (!r.ok) {
