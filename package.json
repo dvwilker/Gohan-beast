@@ -80,7 +80,7 @@
     "url-regex-safe": "^3.0.0",
     "ws": "^8.17.1",
     "yargs": "^17.6.0",
-    "yt-search": "^17.6.0"
+    "yt-search": "@^17.6.0"
   },
   "optionalDependencies": {
     "moment-timezone": "^0.5.45"
