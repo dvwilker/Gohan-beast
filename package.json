@@ -12,16 +12,16 @@
   "scripts": {
     "start": "node index.js"
   },
-  "homepage": "https://github.com/WILKER-OFC/Gohan-beast",
+  "homepage": "https://github.com/dvwilker/Gohan-beast",
   "author": {
-    "name": "WILKER-OFC"
+    "name": "dvwilker"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WILKER-OFC/Gohan-beast.git"
+    "url": "git+https://github.com/dvwilker/Gohan-beast.git"
   },
   "bugs": {
-    "url": "https://github.com/WILKER-OFC/Gohan-beast/issues"
+    "url": "https://github.com/dvwilker/Gohan-beast/issues"
   },
   "license": "MIT-LICENSE",
   "dependencies": {
