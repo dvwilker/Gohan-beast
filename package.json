@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/dvwilker/Gohan-beast",
   "author": {
-    "name": "dvwilker"
+    "name": "WILKER-OFC"
   },
   "repository": {
     "type": "git",
@@ -25,11 +25,15 @@
   },
   "license": "MIT-LICENSE",
   "dependencies": {
+    "@bochilteam/scraper": "^4.0.0",
     "@hapi/boom": "^10.0.1",
+    "@StarlightsTeam/Scraper": "github:Ado926/Starlights-Scraper",
     "@whiskeysockets/baileys": "github:dvwilker/WaBail",
+    "aptoide-scraper": "github:DIEGO-OFC/dv-aptoide-scraper",
     "ruhend-scraper": "*",
     "awesome-phonenumber": "^3.4.0",
     "axios": "^1.1.2",
+    "adonix-scraper": "1.2.5",
     "acrcloud": "^1.4.0",
     "cfonts": "^3.3.0",
     "chalk": "^5.1.0",
