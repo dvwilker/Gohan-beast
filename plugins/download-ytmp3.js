@@ -1,9 +1,6 @@
 import yts from "yt-search"
 import fetch from "node-fetch"
 
-const API_BASE = "https://api-gohan.onrender.com"
-const API_KEY = "GOHAN_wd38w1d453ah06arg"
-
 const handler = async (m, { conn, text }) => {
   if (!text) return m.reply("🎶 Ingresa el nombre o enlace del video de YouTube.")
 
@@ -84,7 +81,7 @@ const handler = async (m, { conn, text }) => {
 👁️ _vistas_: ${vistas}
 ⏳ _duración_: ${durationTimestamp}
 🌐 _enlace_: ${url}
-📚 _api_: ${API_BASE}
+📚 _api_ https://api-gohan.onrender.com
 
      ✧━『 _GOHAN BEAST_ 』━✧
     🐉 _Powered by wilker_ 🐉
@@ -126,7 +123,7 @@ const downloadMedia = async (conn, m, url, quotedMsg) => {
       { quoted: m }
     )
 
-    const apiUrl = `${API_BASE}/download/ytaudio?url=${encodeURIComponent(url)}&apikey=${encodeURIComponent(API_KEY)}`
+    const apiUrl = `https://api-gohan.onrender.com/download/ytaudio?url=${encodeURIComponent(url)}`
     const r = await fetch(apiUrl)
 
     if (!r.ok) {
@@ -197,7 +194,9 @@ const extractVideoId = (url) => {
 
 handler.command = ["play", "yt", "ytsearch"]
 handler.tags = ["download"]
-handler.help = ["play"]
+handler.help = ['play'];
 handler.register = false
 
 export default handler
+
+Bro ahora es la misma api pero con key está en la key GOHAN_wd38w1d453ah06arg
