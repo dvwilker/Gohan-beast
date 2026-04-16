@@ -198,5 +198,3 @@ handler.help = ['play'];
 handler.register = false
 
 export default handler
-
-Bro ahora es la misma api pero con key está en la key GOHAN_wd38w1d453ah06arg
