@@ -14,7 +14,7 @@ var handler = async (m, { conn }) => {
     )
   }
 
-  // GOHAN BESTIA - RECOMPENSAS MEJORADAS 🔥
+  // GOHAN BESTIA - RECOMPENSAS MEJORADAS XDZ🔥
   let coin = Math.floor(Math.random() * 2001) + 500 // Antes 100-500
   let exp = Math.floor(Math.random() * 2001) + 500 // Antes 100-500
   let diamond = Math.floor(Math.random() * 2001) + 500 // Antes 100-500
