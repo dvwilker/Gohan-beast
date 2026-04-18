@@ -85,7 +85,7 @@ const handler = async (m, { conn, usedPrefix: _p }) => {
     // Nombre del bot siempre "Gohan Beast Bot" uwu
     let nombreBot = 'Gohan Beast Bot'
     // Imagen uwu de Gohan Beast
-    let bannerFinal = 'https://iili.io/fgy4Anj.jpg'
+    let bannerFinal = 'https://tmpfiles.org/dl/34296132/1776550707941.jpg'
 
     // Intentar leer configuración personalizada
     const botActual = conn.user?.jid?.split('@')[0].replace(/\D/g, '')
