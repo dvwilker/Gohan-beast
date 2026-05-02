@@ -1,7 +1,7 @@
 # 🐉⚡ 𝐆𝐎𝐇𝐀𝐍 𝐁𝐄𝐀𝐒𝐓 𝐁𝐎𝐓 ⚡🐉
 
 <div align="center">
-  <img src="https://i.imgur.com/GohanBeast.jpg" alt="Gohan Beast Bot" width="400">
+  <img src="https://iili.io/BLwebDl.jpg" alt="Gohan Beast Bot" width="400">
   
   [![WhatsApp Group](https://img.shields.io/badge/WhatsApp-Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/Hgl5fQI7UhtEj6Cr6Rpo5w)
   [![Channel](https://img.shields.io/badge/WhatsApp-Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029VakLbM76mYPPFL0IFI3P)
