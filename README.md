@@ -3,9 +3,9 @@
 <div align="center">
   <img src="https://iili.io/BLwebDl.jpg" alt="Gohan Beast Bot" width="400">
   
-  [![WhatsApp Group](https://img.shields.io/badge/WhatsApp-Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/Hgl5fQI7UhtEj6Cr6Rpo5w)
-  [![Channel](https://img.shields.io/badge/WhatsApp-Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029VakLbM76mYPPFL0IFI3P)
-  [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TheKingWilker/Gohan-Beast-Bot)
+  [![WhatsApp Group](https://img.shields.io/badge/WhatsApp-Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/HD3014hEUmSE5FBP5tcyyI)
+  [![Channel](https://img.shields.io/badge/WhatsApp-Channel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://whatsapp.com/channel/0029Vb7ntULLY6d8uOvyDy0C)
+  [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dvwilker/Gohan-Beast)
   [![API](https://img.shields.io/badge/API-Gohan_Beast-FF4500?style=for-the-badge&logo=api&logoColor=white)](https://api-gohan.onrender.com)
   
   <h3>⚡ Power Level: OVER 9000!! ⚡</h3>
