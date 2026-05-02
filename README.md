@@ -85,12 +85,12 @@ termux-setup-storage
 
 3.  **Clona el Repositorio del Bot**
     ```bash
-    git clone https://github.com/Ado-rgb/Michi-WaBot.git
+    git clone https://github.com/dvwilker/Gohan-beast.git
     ```
 
 4.  **Accede al Directorio del Proyecto**
     ```bash
-    cd Michi-WaBot
+    cd Gohan-beast
     ```
 
 5.  **Instala las Dependencias de Node.js**
