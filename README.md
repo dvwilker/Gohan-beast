@@ -1,4 +1,4 @@
-# 🐉⚡ 𝐆𝐎𝐇𝐀𝐍 𝐁𝐄𝐀𝐒𝐓 𝐁𝐎𝐓 - 𝐌𝐃 ⚡🐉
+# 🐉⚡ 𝐆𝐎𝐇𝐀𝐍 𝐁𝐄𝐀𝐒𝐓 𝐁𝐎𝐓 ⚡🐉
 
 <div align="center">
   <img src="https://i.imgur.com/GohanBeast.jpg" alt="Gohan Beast Bot" width="400">
@@ -72,8 +72,8 @@
 
 Sigue estos pasos para instalar y ejecutar **Gohan Beast Bot** en tu dispositivo.
 
-### 1. **Concede Permisos de Almacenamiento**
-```bash
+### 1. ```**Concede Permisos de Almacenamiento**
+ bash
 termux-setup-storage
     ```
 
