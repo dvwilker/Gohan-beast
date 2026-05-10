@@ -21,7 +21,7 @@ let handler = async (m, { conn, usedPrefix }) => {
     let fecha = fechaObj.toLocaleDateString('es-VE', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Caracas' })
     let dia = fechaObj.toLocaleDateString('es-VE', { weekday: 'long', timeZone: 'America/Caracas' })
 
-    let video = 'https://files.catbox.moe/7dxbr1.mp4'
+    let video = 'https://raw.githubusercontent.com/dvwilker/gohan-storage/main/1778426067417-VID-20260510-WA0207.mp4'
 
 const emojis = {
   'main': '🐉', 'tools': '⚡', 'audio': '🎶', 'group': '🐉',
@@ -113,7 +113,7 @@ await conn.sendMessage(
       externalAdReply: {
         title: global.botname || 'Gohan Beast',
         body: global.dev || '© Powered by Dvwilker',
-        thumbnailUrl: global.banner || 'https://iili.io/Bg18F3J.jpg',
+        thumbnailUrl: global.banner || 'https://raw.githubusercontent.com/dvwilker/gohan-storage/main/1778169576033-IMG-20260502-WA0216.jpg',
         mediaType: 1,
         renderLargerThumbnail: true
       }
