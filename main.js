@@ -619,5 +619,3 @@ console.log(chalk.bold.magenta('\n' + '⭐'.repeat(30)));
 console.log(chalk.bold.yellow('   🐉 GOHAN BESTIA - LISTO PARA PELEAR 🐉'));
 console.log(chalk.bold.cyan('   「El poder de un Saiyajin no tiene límites」'));
 console.log(chalk.bold.magenta('⭐'.repeat(30) + '\n'));
-
-El main.js agrégalo tu we y me pasas listo
