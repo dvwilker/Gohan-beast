@@ -18,7 +18,7 @@ const tags = {
   ia: '🤖 ANDROID 16',
   channel: '📺 KAME HOUSE',
   fun: '😂 DIVERSIÓN SAIYAN',
-  beast: '🐉 COMANDOS BEAST'
+  premium: '🐉 PREMIUN BEAST'
 }
 
 const defaultMenu = {
