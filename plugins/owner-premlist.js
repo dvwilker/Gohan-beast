@@ -7,7 +7,11 @@ const premiumPath = path.resolve(__dirname, "../json/premium.json");
 const expPath = path.resolve(__dirname, "../json/premium_exp.json");
 
 let handler = async (m, { conn }) => {
-  if (!global.owner.map(v => v.replace(/[^0-9]/g, "")).includes(m.sender.split("@")[0])) {
+  // ✅ VALIDACIÓN SEGURA DEL OWNER (corregida)
+  let ownersList = Array.isArray(global.owner) ? global.owner : [global.owner];
+  let cleanOwners = ownersList.map(v => String(v || "").replace(/[^0-9]/g, ""));
+  
+  if (!cleanOwners.includes(m.sender.split("@")[0])) {
     return conn.reply(m.chat, `🐉 GOHAN BEAST\n⚡ Solo el Saiyajin Supremo puede ver la lista premium.`, m);
   }
 
@@ -15,14 +19,31 @@ let handler = async (m, { conn }) => {
     return m.reply("🐉 GOHAN BEAST\n\n⚠️ No hay guerreros premium registrados aún.");
   }
 
-  let premiums = JSON.parse(fs.readFileSync(premiumPath));
+  // ✅ LEER Y VALIDAR premium.json
+  let premiumsData = fs.readFileSync(premiumPath, "utf8");
+  let premiums = [];
+  try {
+    premiums = JSON.parse(premiumsData);
+    if (!Array.isArray(premiums)) premiums = [];
+  } catch (e) {
+    premiums = [];
+  }
+
   if (!Array.isArray(premiums) || premiums.length === 0) {
     return m.reply("🐉 GOHAN BEAST\n\n📭 No hay guerreros premium activos en este momento.");
   }
 
   let expirations = {};
   if (fs.existsSync(expPath)) {
-    expirations = JSON.parse(fs.readFileSync(expPath));
+    try {
+      let expData = fs.readFileSync(expPath, "utf8");
+      expirations = JSON.parse(expData);
+      if (typeof expirations !== "object" || expirations === null || Array.isArray(expirations)) {
+        expirations = {};
+      }
+    } catch (e) {
+      expirations = {};
+    }
   }
 
   let activos = 0;
