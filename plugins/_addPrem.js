@@ -21,13 +21,17 @@ function saveJSON(file, data) {
 }
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
-  if (!global.owner.map(v => v.replace(/[^0-9]/g, "")).includes(m.sender.split("@")[0])) {
+  // ✅ VALIDACIÓN SEGURA DEL OWNER (corregida)
+  let ownersList = Array.isArray(global.owner) ? global.owner : [global.owner];
+  let cleanOwners = ownersList.map(v => String(v || "").replace(/[^0-9]/g, ""));
+  
+  if (!cleanOwners.includes(m.sender.split("@")[0])) {
     return conn.reply(m.chat, `🐉 GOHAN BEAST\n⚡ Solo el owner puede otorgar poder premium.`, m);
   }
 
   let numero = args[0]?.replace(/[@+]/g, "");
   let dias = parseInt(args[1]);
-  
+
   if (!numero || isNaN(dias) || dias <= 0) {
     return conn.reply(m.chat, `🐉 GOHAN BEAST\n📌 Uso: ${usedPrefix + command} <número> <días>\n📌 Ejemplo: ${usedPrefix + command} 584125877491 30`, m);
   }
@@ -54,7 +58,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
   saveJSON(expFile, premiumExp);
 
   await conn.reply(m.chat, `🐉 GOHAN BEAST\n\n✅ ${numero} ahora es premium por ${dias} días\n📅 Expira: ${fechaExpiracion}`, m, { mentions: [userJid] });
-  
+
   await m.react('🐉');
   await m.react('⚡');
 };
