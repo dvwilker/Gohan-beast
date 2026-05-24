@@ -136,7 +136,7 @@ const downloadAsDocument = async (conn, m, url, quotedMsg, title, type) => {
       { quoted: m }
     )
 
-    const apiUrl = `https://api-gohan.onrender.com/download/${apiEndpoint}?url=${encodeURIComponent(url)}`
+    const apiUrl = `https://api-gohan-kz6w.onrender.com/download/${apiEndpoint}?url=${encodeURIComponent(url)}`
     const r = await fetch(apiUrl)
 
     if (!r.ok) {
