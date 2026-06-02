@@ -13,20 +13,20 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) {
     const interactiveMessage = proto.Message.InteractiveMessage.create({
       header: {
-        title: '║✨ 𝙴𝙻𝚈𝚂𝚂𝙸𝙰 𝙼𝙳 ✨║ - TIKTOK',
-        subtitle: 'Descarga videos estilo Elyssia MD 🌸',
+        title: '║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║ - TIKTOK',
+        subtitle: 'Descarga videos estilo 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉',
         hasMediaAttachment: false
       },
       body: {
-        text: `> 🌸 ¡Hola, bienvenida/o a Elyssia MD! ⸜(｡˃ ᵕ ˂ )⸝♡
+        text: `> 🐉 ¡Hola, bienvenida/o a 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃! ⸜(｡˃ ᵕ ˂ )⸝♡
 
 𑁍𓂃 𓈒𓏸 *COMANDO ::* ${usedPrefix + command}
 𑁍𓂃 𓈒𓏸 *USO ::* Envía un enlace de TikTok o una búsqueda
 
-> 👑 *Elyssia MD desarrollado por AmilcarGit* 🌸`
+> 🐉 *𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 By DvWilkerOFC 🐉*`
       },
       footer: {
-        text: '🌸 ║✨ 𝙴𝙻𝚈𝚂𝚂𝙸𝙰 𝙼𝙳 ✨║'
+        text: '🌸 ║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║'
       },
       nativeFlowMessage: {
         buttons: [{
@@ -34,9 +34,9 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
           buttonParamsJson: JSON.stringify({
             title: '🎵 TIKTOK',
             sections: [{
-              title: '🔗 ENLACE O BÚSQUEDA',
+              title: '🐉 ENLACE O BÚSQUEDA',
               rows: [{
-                header: '📥 DESCARGA DIRECTA',
+                header: '🫠 DESCARGA DIRECTA',
                 title: '🎵 PEGAR LINK O NOMBRE',
                 description: 'Ejemplo: https://vm.tiktok.com/... o Goku',
                 id: `tiktok `
@@ -84,18 +84,18 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
       const rows = resultados.map((video, i) => ({
         header: `🎵 ${video.autor || 'Desconocido'}`,
         title: (video.titulo || 'Sin título').substring(0, 35),
-        description: `⏱️ ${video.duracion || '?'}s | 👁️ ${video.vistas || '?'}`,
+        description: `⏱️ ${video.duracion || '?'}s | 🐉 ${video.vistas || '?'}`,
         id: `tt_${i}_${Buffer.from(video.tiktok_url).toString('base64')}_${Buffer.from(video.titulo || 'video').toString('base64')}`
       }))
 
       const interactiveMessage = proto.Message.InteractiveMessage.create({
         header: {
-          title: '║✨ 𝙴𝙻𝚈𝚂𝚂𝙸𝙰 𝙼𝙳 ✨║ - TIKTOK',
-          subtitle: 'Selecciona tu video 🌸',
+          title: '║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║ - TIKTOK',
+          subtitle: 'Selecciona tu video 🐉',
           hasMediaAttachment: false
         },
         body: {
-          text: `> 🌸 Resultados encontrados ⸜(｡˃ ᵕ ˂ )⸝♡
+          text: `> 🐉 Resultados encontrados ⸜(｡˃ ᵕ ˂ )⸝♡
 
 𑁍𓂃 𓈒𓏸 *BÚSQUEDA ::* ${query}
 𑁍𓂃 𓈒𓏸 *RESULTADOS ::* ${resultados.length}
