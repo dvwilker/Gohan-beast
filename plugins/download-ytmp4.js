@@ -125,7 +125,7 @@ const downloadVideo = async (conn, m, url, quotedMsg) => {
       { quoted: m }
     )
 
-    const apiUrl = `https://api-gohan-kz6w.onrender.com/download/ytvideo?url=${encodeURIComponent(url)}`
+    const apiUrl = `https://api-gohan-v1.onrender.com/download/ytvideo?url=${encodeURIComponent(url)}`
     const r = await fetch(apiUrl)
 
     if (!r.ok) {
