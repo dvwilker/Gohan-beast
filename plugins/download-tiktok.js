@@ -13,20 +13,20 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
   if (!text) {
     const interactiveMessage = proto.Message.InteractiveMessage.create({
       header: {
-        title: '🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉 - TIKTOK',
-        subtitle: 'Descarga videos con el poder del dragón',
+        title: '║✨ 𝙴𝙻𝚈𝚂𝚂𝙸𝙰 𝙼𝙳 ✨║ - TIKTOK',
+        subtitle: 'Descarga videos estilo Elyssia MD 🌸',
         hasMediaAttachment: false
       },
       body: {
-        text: `🐉 *¡ACTIVA EL PODER DIVINO!* 🐉
+        text: `> 🌸 ¡Hola, bienvenida/o a Elyssia MD! ⸜(｡˃ ᵕ ˂ )⸝♡
 
-⚡ *COMANDO:* ${usedPrefix + command}
-⚡ *USO:* Envía un enlace de TikTok o una búsqueda
+𑁍𓂃 𓈒𓏸 *COMANDO ::* ${usedPrefix + command}
+𑁍𓂃 𓈒𓏸 *USO ::* Envía un enlace de TikTok o una búsqueda
 
-> 🐉 *Gohan Beast - Poder Máximo Activado*`
+> 👑 *Elyssia MD desarrollado por AmilcarGit* 🌸`
       },
       footer: {
-        text: '🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉'
+        text: '🌸 ║✨ 𝙴𝙻𝚈𝚂𝚂𝙸𝙰 𝙼𝙳 ✨║'
       },
       nativeFlowMessage: {
         buttons: [{
@@ -64,7 +64,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
     return
   }
 
-  await m.react('🐉')
+  await m.react('🎵')
 
   let query = text.trim()
   let isDirectLink = query.includes('tiktok.com') || query.includes('vm.tiktok.com')
@@ -90,20 +90,20 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
       const interactiveMessage = proto.Message.InteractiveMessage.create({
         header: {
-          title: '🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉 - TIKTOK',
-          subtitle: 'Selecciona tu video con el poder del dragón',
+          title: '║✨ 𝙴𝙻𝚈𝚂𝚂𝙸𝙰 𝙼𝙳 ✨║ - TIKTOK',
+          subtitle: 'Selecciona tu video 🌸',
           hasMediaAttachment: false
         },
         body: {
-          text: `🐉 *RESULTADOS DE BÚSQUEDA* 🐉
+          text: `> 🌸 Resultados encontrados ⸜(｡˃ ᵕ ˂ )⸝♡
 
-⚡ *BÚSQUEDA:* ${query}
-⚡ *RESULTADOS:* ${resultados.length}
+𑁍𓂃 𓈒𓏸 *BÚSQUEDA ::* ${query}
+𑁍𓂃 𓈒𓏸 *RESULTADOS ::* ${resultados.length}
 
-> 🐉 *Gohan Beast - Poder Máximo Activado*`
+> 🐉 *𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 By DvWilkerOFC* 🐉`
         },
         footer: {
-          text: '🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉'
+          text: '🐉 ║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║'
         },
         nativeFlowMessage: {
           buttons: [{
@@ -136,7 +136,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
       return
     }
 
-    await conn.sendMessage(m.chat, { text: '🐉 *Procesando video con el poder de Gohan Beast...*' }, { quoted: m })
+    await conn.sendMessage(m.chat, { text: '𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 *Procesando video en 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃...* 🐉' }, { quoted: m })
 
     const downloadUrl = `https://api-de-el-vigilante-8jnf.onrender.com/download/tiktok?url=${encodeURIComponent(query)}`
     const response = await fetch(downloadUrl)
@@ -178,22 +178,22 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
     const interactiveMessage = proto.Message.InteractiveMessage.create({
       header: {
-        title: '🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉 - TIKTOK',
-        subtitle: 'Descarga TikTok con poder divino',
+        title: '║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║ - TIKTOK',
+        subtitle: 'Descarga TikTok 🐉',
         hasMediaAttachment: !!media,
         imageMessage: media ? media.imageMessage : undefined
       },
       body: {
-        text: `🐉 *VIDEO LISTO GUERRERO* 🐉
+        text: `> 🐉 Video listo ⸜(｡˃ ᵕ ˂ )⸝♡
 
-⚡ *TÍTULO:* ${titulo || 'Sin título'}
-⚡ *AUTOR:* ${autor || 'Desconocido'}
-⚡ *DURACIÓN:* ${duracion || '?'}s
+🐉𓂃 𓈒𓏸 *TÍTULO ::* ${titulo || 'Sin título'}
+🐉𓂃 𓈒𓏸 *AUTOR ::* ${autor || 'Desconocido'}
+🐉𓂃 𓈒𓏸 *DURACIÓN ::* ${duracion || '?'}s
 
-> 🐉 *Gohan Beast - Poder Máximo Activado*`
+> 🐉 *𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 desarrollado por DvWilkerOFC* 🐉`
       },
       footer: {
-        text: '🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉'
+        text: '🐉 ║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║'
       },
       nativeFlowMessage: {
         buttons: [{
@@ -231,13 +231,13 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 
   } catch (error) {
     console.error(error)
-    await m.react('❌')
-    m.reply(`🐉 *GOHAN BEAST* 🐉\n\n❌ Error al procesar el video. El poder divino no pudo completar la misión.`)
+    await m.react('🐉')
+    m.reply(`🐉 Error en 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃🐉`)
   }
 }
 
 handler.help = ['tiktok']
 handler.tags = ['descargas']
-handler.command = ['tiktok', 'tt', 'tik', 'gohantt']
+handler.command = ['tiktok', 'tt', 'tik']
 
 export default handler
