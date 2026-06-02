@@ -26,7 +26,7 @@ let handler = async (m, { conn, text, usedPrefix, command }) => {
 > 🐉 *𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 By DvWilkerOFC 🐉*`
       },
       footer: {
-        text: '🌸 ║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║'
+        text: '🐉 ║🐉 𝙶𝙾𝙷𝙰𝙽 𝙱𝙴𝙰𝚂𝚃 🐉║'
       },
       nativeFlowMessage: {
         buttons: [{
