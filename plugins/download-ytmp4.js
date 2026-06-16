@@ -84,7 +84,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
 handler.command = ['play2', 'mp4', 'ytmp4', 'ytvideo', 'playvideo', 'shadowplay']
 handler.help = ['playvideo']
 handler.tags = ['descargas']
-handler.register = true
+handler.register = false
 
 export default handler
 
