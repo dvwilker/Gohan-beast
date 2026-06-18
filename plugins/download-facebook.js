@@ -276,7 +276,7 @@ handler.before = async (m, { conn }) => {
         `┃ 📹 ${pendiente.title.slice(0, 40)}`,
         `┃`,
         `┃ ╭─〔 🙏 *CRÉDITOS* 〕`,
-        `┃ │ 👨‍💻 *API by:* @ElVigilante`,
+        `┃ │ 👨‍💻 *API by:* @DvWilkerOFC`,
         `┃ ╰────────────⬣`,
         `┃`,
         `╰━━━━━━━━━━━━━━━━━━━━━━⬣`
