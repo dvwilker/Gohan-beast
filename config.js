@@ -37,20 +37,6 @@ global.ch = {
 global.multiplier = 69
 global.maxwarn = 2
 
-global.coin = '💎'
-global.regCoins = 1000
-global.dailyCoins = 5000
-global.mineCoins = { min: 100, max: 500 }
-global.runCoins = { min: 50, max: 200 }
-global.slutCoins = { min: 10, max: 50 }
-
-global.cooldown = {
-  daily: 86400000,
-  mine: 60000,
-  run: 60000,
-  slut: 60000
-}
-
 global.APIs = {
   adonix: { url: "https://api-adonix.ultraplus.click", key: "Yuki-WaBot" },
   vreden: { url: "https://api.vreden.web.id", key: null },
