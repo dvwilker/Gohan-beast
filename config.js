@@ -6,7 +6,8 @@ global.owner = [
   ['5492644138998', '𝚆𝙸𝙻𝙺𝙴𝚁', true],
   ['51907376960'],
   ['584125877491', 'dvwilker2', true],
-  ['880077330554979']
+  ['880077330554979'],
+  ['573133374132', 'OWNER2', true]
 ]
 
 global.mods = []
@@ -47,7 +48,8 @@ global.APIs = {
   stellar: { url: "https://api.stellarwa.xyz", key: "YukiWaBot", key2: '1bcd4698ce6c75217275c9607f01fd99' },
   apifaa: { url: "https://api-faa.my.id", key: null },
   xyro: { url: "https://api.xyro.site", key: null },
-  yupra: { url: "https://api.yupra.my.id", key: null }
+  yupra: { url: "https://api.yupra.my.id", key: null },
+  yosoyyo: { url: "https://yosoyyo-api-ofc.onrender.com", key: "free_key" }
 }
 
 let file = fileURLToPath(import.meta.url)
