@@ -29,13 +29,9 @@ ${usedPrefix + command} https://facebook.com/watch?v=...
       const res = await fetch(api)
       const json = await res.json()
 
-      if (json?.result?.download_url) {
-        videoUrl = json.result.download_url
-        title = json.result.title || 'Facebook Video'
-      }
-
-      if (json?.result?.audio_url) {
-        audioUrl = json.result.audio_url
+      if (json?.status) {
+        videoUrl = json.result?.media?.video_hd || json.result?.media?.video_sd || ''
+        title = json.result?.info?.title || 'Facebook Video'
       }
 
     } catch (e) {
@@ -156,21 +152,27 @@ handler.before = async (m, { conn }) => {
         const res = await fetch(api)
         const json = await res.json()
         
-        if (json?.result?.audio_url) {
-          await conn.sendFile(
-            m.chat,
-            json.result.audio_url,
-            'facebook-audio.mp3',
-            `🐉 *GOHAN BEAST — FACEBOOK AUDIO* 🐉
+        if (json?.status) {
+          const audioOnlyUrl = json.result?.media?.video_hd || json.result?.media?.video_sd
+          if (audioOnlyUrl) {
+            await conn.sendFile(
+              m.chat,
+              audioOnlyUrl,
+              'facebook-audio.mp3',
+              `🐉 *GOHAN BEAST — FACEBOOK AUDIO* 🐉
 
 ✅ Aquí tienes tu audio guerrero.
 
-🎵 *Título:* ${json.result.title || 'Facebook Audio'}
+🎵 *Título:* ${json.result?.info?.title || 'Facebook Audio'}
 🎵 *Formato:* MP3
 ⚡ Poder Máximo Activado`,
-            m
-          )
-          await m.react('✅')
+              m
+            )
+            await m.react('✅')
+          } else {
+            await conn.reply(m.chat, '🐉 *GOHAN BEAST* 🐉\n\n❌ No se encontró audio para este video.', m)
+            await m.react('❌')
+          }
         } else {
           await conn.reply(m.chat, '🐉 *GOHAN BEAST* 🐉\n\n❌ No se encontró audio para este video.', m)
           await m.react('❌')
