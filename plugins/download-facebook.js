@@ -25,7 +25,7 @@ ${usedPrefix + command} https://facebook.com/watch?v=...
     if (m.react) await m.react('🐉')
 
     try {
-      const api = `https://api-gohan-v1.onrender.com/download/facebook?url=${encodeURIComponent(args[0])}`
+      const api = `https://yosoyyo-api-ofc.onrender.com/api/facebook?url=${encodeURIComponent(args[0])}&apiKey=free_key`
       const res = await fetch(api)
       const json = await res.json()
 
@@ -152,7 +152,7 @@ handler.before = async (m, { conn }) => {
       const url = decodeURIComponent(text.replace('fb_audio_', ''))
       
       try {
-        const api = `https://api-gohan-v1.onrender.com/download/facebook?url=${encodeURIComponent(url)}`
+        const api = `https://yosoyyo-api-ofc.onrender.com/api/facebook?url=${encodeURIComponent(url)}&apiKey=free_key`
         const res = await fetch(api)
         const json = await res.json()
         
