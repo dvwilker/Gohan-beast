@@ -7,16 +7,13 @@ let handler = async (m, { conn }) => {
 ⚡ *GOHAN BEAST BOT*
 
 🏷️ *Nombre:* WILKER OFC
-📞 *WhatsApp:* +5492644893953
-📧 *Email:* developer.wilker.ofc@gmail.com
-
-🔗 *Enlace directo:*
-https://wa.me/5492644893953
+📞 *WhatsApp:* +584125877491
+📧 *Email:* dvwilker40@gmail.com
 
 🛠️ *Desarrollador especializado en:*
 • Bots de WhatsApp
-• Bots de Telegram
-• Bost de discord
+• Sitios web
+• Creador de Html
 
 📌 *Contacta para:*
 • Bots personalizados
@@ -24,7 +21,7 @@ https://wa.me/5492644893953
 • Soporte técnico
 • Colaboraciones
 
-⚡ _Desarrollando con pasión desde 2024_
+⚡ _Desarrollando Codigos desde 2024_
 `)
 }
 
