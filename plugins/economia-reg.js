@@ -7,11 +7,11 @@ let handler = async (m, { conn, text }) => {
   if (user.registered) {
     const level = Math.floor(user.exp / 1000)
     const pp = await conn.profilePictureUrl(userId, 'image').catch(() => null)
-    const foto = pp || 'https://i.ibb.co/5LB7JYq/default-avatar.png'
     
-    await conn.sendMessage(m.chat, {
-      image: { url: foto },
-      caption: `
+    if (pp) {
+      await conn.sendMessage(m.chat, {
+        image: { url: pp },
+        caption: `
 🐉 GOHAN BEAST — PERFIL
 
 👤 Nombre: ${user.name || 'Sin nombre'}
@@ -20,8 +20,20 @@ let handler = async (m, { conn, text }) => {
 💎 Coins: ${formatNumber(user.coins)}
 🏦 Banco: ${formatNumber(user.bank)}
 ⚡ Exp: ${formatNumber(user.exp)}
-    `.trim()
-    }, { quoted: m })
+        `.trim()
+      }, { quoted: m })
+    } else {
+      await conn.reply(m.chat, `
+🐉 GOHAN BEAST — PERFIL
+
+👤 Nombre: ${user.name || 'Sin nombre'}
+📅 Edad: ${user.age || 'Sin edad'}
+🏆 Nivel: ${level}
+💎 Coins: ${formatNumber(user.coins)}
+🏦 Banco: ${formatNumber(user.bank)}
+⚡ Exp: ${formatNumber(user.exp)}
+      `.trim(), m)
+    }
     return
   }
 
@@ -51,19 +63,29 @@ let handler = async (m, { conn, text }) => {
   updateUser(userId, user)
 
   const pp = await conn.profilePictureUrl(userId, 'image').catch(() => null)
-  const foto = pp || 'https://i.ibb.co/5LB7JYq/default-avatar.png'
-
-  await conn.sendMessage(m.chat, {
-    image: { url: foto },
-    caption: `
+  
+  if (pp) {
+    await conn.sendMessage(m.chat, {
+      image: { url: pp },
+      caption: `
 🐉 GOHAN BEAST — REGISTRO EXITOSO
 
 ✅ ¡Bienvenido guerrero ${name}!
 
 🎁 Recompensa: ${formatNumber(global.regCoins)} ${global.coin}
 📅 Edad: ${age} años
-    `.trim()
-  }, { quoted: m })
+      `.trim()
+    }, { quoted: m })
+  } else {
+    await conn.reply(m.chat, `
+🐉 GOHAN BEAST — REGISTRO EXITOSO
+
+✅ ¡Bienvenido guerrero ${name}!
+
+🎁 Recompensa: ${formatNumber(global.regCoins)} ${global.coin}
+📅 Edad: ${age} años
+    `.trim(), m)
+  }
   await m.react('🐉')
 }
 
