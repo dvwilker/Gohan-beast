@@ -1,5 +1,4 @@
-// plugins/ppt.js
-import { getUser, updateUser, formatNumber } from './economy.js'
+import { getUser, updateUser, formatNumber } from '../economy-system.js'
 
 let handler = async (m, { conn, text }) => {
   const userId = m.sender
