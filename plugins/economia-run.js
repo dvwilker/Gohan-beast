@@ -1,4 +1,4 @@
-import { getUser, updateUser, getCooldown, formatTime, formatNumber } from './economy.js'
+import { getUser, updateUser, getCooldown, formatTime, formatNumber } from '../economy-system.js'
 
 let handler = async (m, { conn }) => {
   const userId = m.sender
