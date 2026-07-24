@@ -1,8 +1,8 @@
-import { readUsers, formatNumber } from './economy.js'
+import { readUsers, formatNumber } from '../economy-system.js'
 
 let handler = async (m, { conn }) => {
   const users = readUsers()
-
+  
   const sorted = Object.entries(users)
     .filter(([id, data]) => data.registered)
     .map(([id, data]) => ({
