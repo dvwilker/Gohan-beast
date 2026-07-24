@@ -6,12 +6,7 @@ let handler = async (m, { conn, text }) => {
   
   if (user.registered) {
     const level = Math.floor(user.exp / 1000)
-    const pp = await conn.profilePictureUrl(userId, 'image').catch(() => null)
-    
-    if (pp) {
-      await conn.sendMessage(m.chat, {
-        image: { url: pp },
-        caption: `
+    await conn.reply(m.chat, `
 🐉 GOHAN BEAST — PERFIL
 
 👤 Nombre: ${user.name || 'Sin nombre'}
@@ -20,20 +15,7 @@ let handler = async (m, { conn, text }) => {
 💎 Coins: ${formatNumber(user.coins)}
 🏦 Banco: ${formatNumber(user.bank)}
 ⚡ Exp: ${formatNumber(user.exp)}
-        `.trim()
-      }, { quoted: m })
-    } else {
-      await conn.reply(m.chat, `
-🐉 GOHAN BEAST — PERFIL
-
-👤 Nombre: ${user.name || 'Sin nombre'}
-📅 Edad: ${user.age || 'Sin edad'}
-🏆 Nivel: ${level}
-💎 Coins: ${formatNumber(user.coins)}
-🏦 Banco: ${formatNumber(user.bank)}
-⚡ Exp: ${formatNumber(user.exp)}
-      `.trim(), m)
-    }
+    `.trim(), m)
     return
   }
 
@@ -62,30 +44,14 @@ let handler = async (m, { conn, text }) => {
   user.exp = 0
   updateUser(userId, user)
 
-  const pp = await conn.profilePictureUrl(userId, 'image').catch(() => null)
-  
-  if (pp) {
-    await conn.sendMessage(m.chat, {
-      image: { url: pp },
-      caption: `
+  await conn.reply(m.chat, `
 🐉 GOHAN BEAST — REGISTRO EXITOSO
 
 ✅ ¡Bienvenido guerrero ${name}!
 
 🎁 Recompensa: ${formatNumber(global.regCoins)} ${global.coin}
 📅 Edad: ${age} años
-      `.trim()
-    }, { quoted: m })
-  } else {
-    await conn.reply(m.chat, `
-🐉 GOHAN BEAST — REGISTRO EXITOSO
-
-✅ ¡Bienvenido guerrero ${name}!
-
-🎁 Recompensa: ${formatNumber(global.regCoins)} ${global.coin}
-📅 Edad: ${age} años
-    `.trim(), m)
-  }
+  `.trim(), m)
   await m.react('🐉')
 }
 
