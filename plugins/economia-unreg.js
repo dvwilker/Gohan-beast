@@ -8,35 +8,20 @@ let handler = async (m, { conn }) => {
     return conn.reply(m.chat, '❌ No estás registrado.', m)
   }
 
-  const confirm = await conn.reply(m.chat, `
-🐉 GOHAN BEAST — ELIMINAR CUENTA
-
-⚠️ ¿Seguro que quieres eliminar tu cuenta?
-Perderás todas tus coins, nivel y progreso.
-
-Responde con *si* para confirmar
-    `.trim(), m)
-
-  const response = await new Promise(resolve => {
-    conn.on('message', async (msg) => {
-      if (msg.key.fromMe) return
-      if (msg.key.remoteJid === m.chat && msg.key.participant === userId) {
-        resolve(msg.message?.conversation || msg.message?.extendedTextMessage?.text || '')
-      }
-    })
-    setTimeout(() => resolve('timeout'), 30000)
-  })
-
-  if (response.toLowerCase() !== 'si') {
-    return conn.reply(m.chat, '❌ Operación cancelada.', m)
-  }
-
   const users = readUsers()
   delete users[userId]
   saveUsers(users)
 
-  await conn.reply(m.chat, '🐉 GOHAN BEAST\n\n✅ Cuenta eliminada.', m)
-  await m.react('✅')
+  await conn.reply(m.chat, `
+🐉 GOHAN BEAST — CUENTA ELIMINADA
+
+✅ Tu cuenta ha sido eliminada exitosamente.
+
+💔 Adiós guerrero, siempre tendrás un lugar en el Kame House.
+
+⚡ Si deseas volver, usa .reg nombre.edad
+  `.trim(), m)
+  await m.react('💔')
 }
 
 handler.command = ['unreg']
