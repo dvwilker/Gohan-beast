@@ -57,8 +57,8 @@ ${text}
   }
 }
 
-handler.command = ['qr', 'qrcode']
+handler.command = ['qrt', 'qrtcode']
 handler.tags = ['tools']
-handler.help = ['qr <texto/enlace>']
+handler.help = ['qrt <texto/enlace>']
 
 export default handler
