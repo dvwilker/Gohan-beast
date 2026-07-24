@@ -1,4 +1,4 @@
-import { getUser, formatNumber } from './economy.js'
+import { getUser, formatNumber } from '../economy-system.js'
 
 let handler = async (m, { conn }) => {
   const userId = m.sender
