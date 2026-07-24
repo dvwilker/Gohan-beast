@@ -45,7 +45,7 @@
     "google-it": "^1.6.4",
     "human-readable": "^0.2.1",
     "jsdom": "^20.0.1",
-    "jimp": "^1.6.0",",
+    "jimp": "^1.6.0",
     "link-preview-js": "^3.0.0",
     "lodash": "latest",
     "lowdb": "^3.0.0",
