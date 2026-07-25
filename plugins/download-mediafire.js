@@ -31,7 +31,7 @@ let handler = async (m, { conn, text }) => {
 
   try {
     await m.react('⏳')
-    
+
     const api = `https://api.mediafire.com/api/1.5/file/get_info.php?recursive=1&file_id=${extractFileId(text)}&response_format=json`
     const res = await axios.get(api)
     const data = res.data.response
@@ -43,8 +43,7 @@ let handler = async (m, { conn, text }) => {
     const fileInfo = data.file_info
     const fileName = fileInfo.filename
     const fileSize = (fileInfo.size / 1024 / 1024).toFixed(2)
-    const downloadUrl = fileInfo.quickkey
-
+    
     const info = `
 🐉 GOHAN BEAST — MEDIA FIRE
 
@@ -64,8 +63,10 @@ let handler = async (m, { conn, text }) => {
     if (downloadData.links && downloadData.links.length > 0) {
       const link = downloadData.links[0].url
 
+      const fileBuffer = await axios.get(link, { responseType: 'arraybuffer' })
+      
       await conn.sendMessage(m.chat, {
-        document: { url: link },
+        document: fileBuffer.data,
         mimetype: 'application/octet-stream',
         fileName: fileName,
         caption: `
@@ -86,7 +87,7 @@ let handler = async (m, { conn, text }) => {
     }
   } catch (e) {
     console.error('Error en MediaFire:', e)
-    await conn.reply(m.chat, '❌ Error al descargar el archivo de MediaFire.', m)
+    await conn.reply(m.chat, '❌ Error al descargar el archivo de MediaFire. Verifica que el enlace sea válido.', m)
     await m.react('❌')
   }
 }
