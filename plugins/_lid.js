@@ -1,3 +1,5 @@
+import { isLid, isLidConverted, resolveAnyLidToJid, normalizeToPhoneNumber } from '../lid/index.js'
+
 const handler = async (msg, { conn }) => {
   const chatId = msg.key.remoteJid
   const senderId = msg.key.participant || msg.key.remoteJid
@@ -12,15 +14,40 @@ const handler = async (msg, { conn }) => {
   const citado = context?.participant
   const objetivo = citado || senderId
 
-  const esLID = objetivo.endsWith('@lid')
-  const tipo = esLID ? 'LID oculto (@lid)' : 'Número visible (@s.whatsapp.net)'
-  const numero = objetivo.replace(/[^0-9]/g, '')
+  const esLID = isLid(objetivo)
+  const esLIDConvertido = isLidConverted(objetivo)
+  const tipo = esLID ? 'LID oculto (@lid)' : esLIDConvertido ? 'LID convertido (número fake)' : 'Número visible (@s.whatsapp.net)'
 
-  const mensaje = `
+  // Intentar resolver el número real
+  let numeroReal = normalizeToPhoneNumber(objetivo)
+  let resolvedJid = null
+
+  try {
+    const groupMetadata = conn.chats?.[chatId]?.metadata
+    if (groupMetadata?.participants) {
+      resolvedJid = resolveAnyLidToJid(objetivo, groupMetadata.participants)
+      if (resolvedJid && resolvedJid !== objetivo) {
+        numeroReal = normalizeToPhoneNumber(resolvedJid)
+      }
+    }
+  } catch {}
+
+  const numero = objetivo.replace(/[^0-9]/g, '')
+  const numeroMostrar = numeroReal || numero
+
+  const mensaje = esLID || esLIDConvertido ? `
 📡 *Información del usuario detectado:*
 
 👤 *Identificador:* ${objetivo}
-📱 *Número:* +${numero}
+📱 *Número real:* +${numeroMostrar}
+🔐 *Tipo de cuenta:* ${tipo}
+${resolvedJid && resolvedJid !== objetivo ? `✅ *Resuelto a:* ${resolvedJid}` : ''}
+⚠️ *Nota:* Este usuario tiene protección LID activa. El número puede no ser visible públicamente.
+`.trim() : `
+📡 *Información del usuario detectado:*
+
+👤 *Identificador:* ${objetivo}
+📱 *Número:* +${numeroMostrar}
 🔐 *Tipo de cuenta:* ${tipo}
 `.trim()
 
