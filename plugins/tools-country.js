@@ -47,19 +47,21 @@ let handler = async (m, { conn, text }) => {
     let language = 'N/A'
     let currency = 'N/A'
     let region = 'N/A'
+    let president = 'N/A'
     
     infoBox.find('tr').each((i, row) => {
       const th = $(row).find('th').text().trim()
       const td = $(row).find('td').text().trim()
+      const tdHtml = $(row).find('td').html() || ''
       
       if (th.includes('Capital') || th.includes('capital')) {
         const clean = td.replace(/\[.*?\]/g, '').split(' ')[0]
         capital = clean
       }
       if (th.includes('Población') || th.includes('población')) {
-        const clean = td.replace(/\[.*?\]/g, '').replace(/[^\d\s]/g, '').trim()
+        const clean = td.replace(/\[.*?\]/g, '').replace(/[^\d\s,]/g, '').trim()
         if (clean) {
-          const numbers = clean.match(/[\d,]+/g)
+          const numbers = clean.match(/[\d,.]+/g)
           population = numbers ? numbers[0] : 'N/A'
         }
       }
@@ -68,12 +70,21 @@ let handler = async (m, { conn, text }) => {
         language = clean
       }
       if (th.includes('Moneda') || th.includes('moneda')) {
-        const clean = td.replace(/\[.*?\]/g, '').split('(')[0].trim().split('/')[0].trim()
-        currency = clean
+        let clean = td.replace(/\[.*?\]/g, '').trim()
+        const match = clean.match(/([a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+)/)
+        if (match) {
+          currency = match[1].trim()
+        } else {
+          currency = clean
+        }
       }
       if (th.includes('Región') || th.includes('región')) {
         const clean = td.replace(/\[.*?\]/g, '').trim()
         region = clean
+      }
+      if (th.includes('Presidente') || th.includes('presidente') || th.includes('Presidenta') || th.includes('presidenta') || th.includes('Jefe de Estado') || th.includes('jefe de estado')) {
+        const clean = td.replace(/\[.*?\]/g, '').trim()
+        president = clean
       }
     })
     
@@ -87,6 +98,7 @@ let handler = async (m, { conn, text }) => {
 👥 Población: ${population}
 🗣️ Idiomas: ${language}
 💵 Moneda: ${currency}
+👑 Presidente: ${president}
 📍 Región: ${region}
 
 ⚡ Gohan Beast - Poder Máximo Activado
