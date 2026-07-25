@@ -14,27 +14,56 @@ let handler = async (m, { conn, text }) => {
 
   try {
     await m.react('⏳')
-    const res = await axios.get(`https://restcountries.com/v3.1/name/${text}`)
+    
+
+    const res = await axios.get(`https://restcountries.com/v5/name/${encodeURIComponent(text)}`)
     const data = res.data[0]
+
+    if (!data) {
+      return conn.reply(m.chat, '❌ País no encontrado.', m)
+    }
+
+    const name = data.name?.common || data.name?.official || 'N/A'
+    const capital = data.capital?.[0] || 'N/A'
+    const population = data.population ? data.population.toLocaleString() : 'N/A'
+    const languages = data.languages ? Object.values(data.languages).join(', ') : 'N/A'
+    
+ 
+    let currencyName = 'N/A'
+    let currencySymbol = 'N/A'
+    if (data.currencies) {
+      const firstCurrency = Object.values(data.currencies)[0]
+      if (firstCurrency) {
+        currencyName = firstCurrency.name || 'N/A'
+        currencySymbol = firstCurrency.symbol || 'N/A'
+      }
+    }
+    
+    const tld = data.tld?.[0] || 'N/A'
+    const independent = data.independent !== undefined ? (data.independent ? '✅ Sí' : '❌ No') : 'N/A'
+    const region = data.region || 'N/A'
+    const subregion = data.subregion || 'N/A'
+    const flag = data.flags?.png || null
 
     const info = `
 🐉 GOHAN BEAST — INFORMACIÓN DE PAÍS
 
-🌍 *País:* ${data.name.common}
-🏛️ *Capital:* ${data.capital?.[0] || 'N/A'}
-👥 *Población:* ${data.population.toLocaleString()}
-🗣️ *Idiomas:* ${Object.values(data.languages || {}).join(', ')}
-💵 *Moneda:* ${Object.values(data.currencies || {})[0]?.name || 'N/A'} (${Object.values(data.currencies || {})[0]?.symbol || 'N/A'})
-🌐 *Dominio:* ${data.tld?.[0] || 'N/A'}
-📅 *Independencia:* ${data.independent ? '✅ Sí' : '❌ No'}
-📍 *Región:* ${data.region || 'N/A'}
+🌍 *País:* ${name}
+🏛️ *Capital:* ${capital}
+👥 *Población:* ${population}
+🗣️ *Idiomas:* ${languages}
+💵 *Moneda:* ${currencyName} (${currencySymbol})
+🌐 *Dominio:* ${tld}
+📅 *Independencia:* ${independent}
+📍 *Región:* ${region}
+🗺️ *Subregión:* ${subregion}
 
 ⚡ *Gohan Beast - Poder Máximo Activado*
     `.trim()
 
-    if (data.flags?.png) {
+    if (flag) {
       await conn.sendMessage(m.chat, {
-        image: { url: data.flags.png },
+        image: { url: flag },
         caption: info
       }, { quoted: m })
     } else {
@@ -42,7 +71,8 @@ let handler = async (m, { conn, text }) => {
     }
     await m.react('✅')
   } catch (e) {
-    await conn.reply(m.chat, '❌ País no encontrado.', m)
+    console.error('Error en country:', e)
+    await conn.reply(m.chat, '❌ País no encontrado o error en la API.', m)
     await m.react('❌')
   }
 }
