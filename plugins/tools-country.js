@@ -15,8 +15,7 @@ let handler = async (m, { conn, text }) => {
   try {
     await m.react('⏳')
     
-
-    const res = await axios.get(`https://restcountries.com/v5/name/${encodeURIComponent(text)}`)
+    const res = await axios.get(`https://restcountries.com/v3.1/name/${encodeURIComponent(text)}`)
     const data = res.data[0]
 
     if (!data) {
@@ -28,7 +27,6 @@ let handler = async (m, { conn, text }) => {
     const population = data.population ? data.population.toLocaleString() : 'N/A'
     const languages = data.languages ? Object.values(data.languages).join(', ') : 'N/A'
     
- 
     let currencyName = 'N/A'
     let currencySymbol = 'N/A'
     if (data.currencies) {
@@ -72,7 +70,7 @@ let handler = async (m, { conn, text }) => {
     await m.react('✅')
   } catch (e) {
     console.error('Error en country:', e)
-    await conn.reply(m.chat, '❌ País no encontrado o error en la API.', m)
+    await conn.reply(m.chat, '❌ País no encontrado. Verifica el nombre o intenta con otro país.', m)
     await m.react('❌')
   }
 }
