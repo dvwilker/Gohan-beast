@@ -26,9 +26,19 @@ let handler = async (m, { conn, text }) => {
     const $ = cheerio.load(data)
     
     let flag = null
-    const flagImg = $('.infobox .infobox-image img').attr('src')
+    
+    const flagImg = $('.infobox img').filter((i, el) => {
+      const src = $(el).attr('src') || ''
+      return src.includes('Bandera') || src.includes('Flag') || src.includes('flag') || src.includes('bandera')
+    }).first().attr('src')
+    
     if (flagImg) {
       flag = flagImg.startsWith('//') ? 'https:' + flagImg : flagImg
+    } else {
+      const img = $('.infobox .infobox-image img').first().attr('src')
+      if (img) {
+        flag = img.startsWith('//') ? 'https:' + img : img
+      }
     }
     
     const infoBox = $('.infobox')
@@ -43,19 +53,27 @@ let handler = async (m, { conn, text }) => {
       const td = $(row).find('td').text().trim()
       
       if (th.includes('Capital') || th.includes('capital')) {
-        capital = td
+        const clean = td.replace(/\[.*?\]/g, '').split(' ')[0]
+        capital = clean
       }
       if (th.includes('Población') || th.includes('población')) {
-        population = td.replace(/\[.*?\]/g, '').trim()
+        const clean = td.replace(/\[.*?\]/g, '').replace(/[^\d\s]/g, '').trim()
+        if (clean) {
+          const numbers = clean.match(/[\d,]+/g)
+          population = numbers ? numbers[0] : 'N/A'
+        }
       }
       if (th.includes('Idioma') || th.includes('idioma') || th.includes('Idiomas')) {
-        language = td.replace(/\[.*?\]/g, '').trim()
+        const clean = td.replace(/\[.*?\]/g, '').split(',')[0].trim()
+        language = clean
       }
       if (th.includes('Moneda') || th.includes('moneda')) {
-        currency = td.replace(/\[.*?\]/g, '').trim()
+        const clean = td.replace(/\[.*?\]/g, '').split('(')[0].trim().split('/')[0].trim()
+        currency = clean
       }
       if (th.includes('Región') || th.includes('región')) {
-        region = td.replace(/\[.*?\]/g, '').trim()
+        const clean = td.replace(/\[.*?\]/g, '').trim()
+        region = clean
       }
     })
     
