@@ -18,14 +18,14 @@ let handler = async (m, { conn, text, command }) => {
   try {
     let result
     if (command === 'base64') {
-      result = Buffer.from(text).toString('base64')
+      result = Buffer.from(text, 'utf-8').toString('base64')
       await conn.reply(m.chat, `
 🐉 GOHAN BEAST — BASE64
 
 📌 Texto original: ${text}
 ✅ Codificado: ${result}
       `.trim(), m)
-    } else {
+    } else if (command === 'unbase64') {
       result = Buffer.from(text, 'base64').toString('utf-8')
       await conn.reply(m.chat, `
 🐉 GOHAN BEAST — BASE64
@@ -33,10 +33,13 @@ let handler = async (m, { conn, text, command }) => {
 📌 Código: ${text}
 ✅ Decodificado: ${result}
       `.trim(), m)
+    } else {
+      return conn.reply(m.chat, '❌ Comando no reconocido.', m)
     }
     await m.react('✅')
   } catch (e) {
-    await conn.reply(m.chat, '❌ Error al procesar el texto.', m)
+    console.error('Error en base64:', e)
+    await conn.reply(m.chat, '❌ Error al procesar el texto. Asegúrate de que el texto sea válido.', m)
     await m.react('❌')
   }
 }
