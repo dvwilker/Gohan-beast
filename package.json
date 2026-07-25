@@ -26,7 +26,7 @@
   "license": "MIT-LICENSE",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@whiskeysockets/baileys": "npm:ourin-baileys@latest",
+    "@whiskeysockets/baileys": "git@github.com:Andresv27728/baileys-beta.git",
     "awesome-phonenumber": "^3.4.0",
     "axios": "^1.1.2",
     "acrcloud": "^1.4.0",
