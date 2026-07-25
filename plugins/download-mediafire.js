@@ -32,32 +32,39 @@ let handler = async (m, { conn, text }) => {
   try {
     await m.react('⏳')
 
-    const api = `https://api.agatz.xyz/api/mediafire?url=${encodeURIComponent(text)}`
+    const api = `https://api.davidcyriltech.my.id/mediafire?url=${encodeURIComponent(text)}`
     const res = await axios.get(api)
     const data = res.data
 
-    if (!data.status || !data.data) {
+    if (!data.status || !data.result) {
       return conn.reply(m.chat, '❌ No se pudo obtener la información del archivo.', m)
     }
 
-    const fileInfo = data.data
-    const fileName = fileInfo.nama || 'archivo'
-    const fileSize = fileInfo.ukuran || 'Desconocido'
-    const downloadUrl = fileInfo.link
+    const fileInfo = data.result
+    const fileName = fileInfo.filename || 'archivo'
+    const fileSize = fileInfo.filesize || 'Desconocido'
+    const downloadUrl = fileInfo.url || fileInfo.download
+
+    if (!downloadUrl) {
+      return conn.reply(m.chat, '❌ No se encontró enlace de descarga.', m)
+    }
 
     const info = `
 🐉 GOHAN BEAST — MEDIA FIRE
 
 📌 *Nombre:* ${fileName}
 📦 *Tamaño:* ${fileSize}
-📁 *Tipo:* ${fileInfo.tipe || 'Desconocido'}
+📁 *Tipo:* ${fileInfo.filetype || 'Desconocido'}
 
 ⚡ Descargando archivo...
     `.trim()
 
     await conn.reply(m.chat, info, m)
 
-    const fileBuffer = await axios.get(downloadUrl, { responseType: 'arraybuffer' })
+    const fileBuffer = await axios.get(downloadUrl, { 
+      responseType: 'arraybuffer',
+      timeout: 30000
+    })
     
     await conn.sendMessage(m.chat, {
       document: fileBuffer.data,
@@ -77,7 +84,7 @@ let handler = async (m, { conn, text }) => {
     await m.react('✅')
   } catch (e) {
     console.error('Error en MediaFire:', e)
-    await conn.reply(m.chat, '❌ Error al descargar el archivo. Verifica que el enlace sea válido.', m)
+    await conn.reply(m.chat, '❌ Error al descargar el archivo. Verifica que el enlace sea válido o intenta con otro.', m)
     await m.react('❌')
   }
 }
