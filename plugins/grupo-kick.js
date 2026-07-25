@@ -1,44 +1,42 @@
-let handler = async (m, { conn, usedPrefix, command, participants, isAdmin, isBotAdmin }) => {
-  const normalize = (jid) => String(jid || '').split('@')[0].split(':')[0].replace(/[^0-9]/g, '')
-  const toUserJid = (jid) => {
-    const n = normalize(jid)
-    return n ? `${n}@s.whatsapp.net` : ''
+let handler = async (m, { conn, text, isAdmin, isOwner }) => {
+  if (!m.isGroup) {
+    return conn.reply(m.chat, '❌ Este comando solo funciona en grupos.', m)
   }
 
-  if (!m.isGroup) return m.reply('🔱 ᴇsᴛᴇ ᴄᴏᴍᴀɴᴅᴏ ᴇs sᴏʟᴏ ᴘᴀʀᴀ ɢʀᴜᴘᴏs.\n> ������� ʙᴏᴛ 🔱')
-  if (!isAdmin && !m.key.fromMe) return m.reply('🔱 ᴇsᴛᴇ ᴄᴏᴍᴀɴᴅᴏ ᴇs sᴏʟᴏ ᴘᴀʀᴀ ᴀᴅᴍɪɴɪsᴛʀᴀᴅᴏʀᴇs.\n> ������� ʙᴏᴛ 🔱')
-  if (!isBotAdmin) return m.reply('🔱 ɴᴇᴄᴇsɪᴛᴏ sᴇʀ ᴀᴅᴍɪɴ ᴘᴀʀᴀ ʜᴀᴄᴇʀ ᴇsᴏ.\n> ������� ʙᴏᴛ 🔱')
+  if (!isAdmin && !isOwner) {
+    return conn.reply(m.chat, '❌ Solo los administradores pueden expulsar usuarios.', m)
+  }
 
-  let target = (m.mentionedJid && m.mentionedJid[0]) || (m.quoted?.sender) || null
-  if (!target) return m.reply('⚜️ ᴅᴇʙᴇs ᴍᴇɴᴄɪᴏɴᴀʀ ᴜɴ ᴜsᴜᴀʀɪᴏ ᴏ ʀᴇsᴘᴏɴᴅᴇʀ ᴀ ᴜɴ ᴍᴇɴsᴀᴊᴇ.\n> ������� ʙᴏᴛ 🔱')
+  const user = text.replace(/[@+]/g, '').trim() + '@s.whatsapp.net'
+  if (!text) {
+    return conn.reply(m.chat, `
+🐉 GOHAN BEAST — EXPULSAR USUARIO
 
-  const groupMetadata = await conn.groupMetadata(m.chat)
-  const participantsData = groupMetadata.participants || []
-  const botId = conn.user?.id || conn.user?.jid || ''
-  const botNum = normalize(botId)
-  const targetNum = normalize(target)
-  const owner = participantsData.find(p => p.admin === 'superadmin')
-  const adminNums = new Set(participantsData.filter(p => ['admin', 'superadmin'].includes(p.admin)).map(p => normalize(p.id)))
-
-  if (targetNum && targetNum === botNum) return m.reply('⚠️ ɴᴏ ᴘᴜᴇᴅᴏ ᴇxᴘᴜʟsᴀʀᴍᴇ ᴀ ᴍɪ ᴍɪsᴍᴏ.\n> ������� ʙᴏᴛ 🔱')
-  if (adminNums.has(targetNum) || (owner && normalize(owner.id) === targetNum)) {
-    return m.reply('🚫 ɴᴏ ᴘᴜᴇᴅᴏ ᴇxᴘᴜʟsᴀʀ ᴀ ᴏᴛʀᴏ ᴀᴅᴍɪɴ ɴɪ ᴀʟ ᴄʀᴇᴀᴅᴏʀ.\n> ������� ʙᴏᴛ 🔱')
+📌 Uso: .kick @usuario
+📌 Ejemplo: .kick @usuario
+    `.trim(), m)
   }
 
   try {
+    await conn.groupParticipantsUpdate(m.chat, [user], 'remove')
+    await conn.reply(m.chat, `
+🐉 GOHAN BEAST — USUARIO EXPULSADO
 
-    await conn.groupParticipantsUpdate(m.chat, [toUserJid(target)], 'remove')
-  await conn.reply(m.chat, `✅ ᴜsᴜᴀʀɪᴏ @${targetNum} ᴇxᴘᴜʟsᴀᴅᴏ.\n> ������� ʙᴏᴛ 🔱`, m, { mentions: [toUserJid(target)] })
+🗡️ @${user.split('@')[0]} ha sido expulsado del grupo
+
+⚡ *Gohan Beast - Poder Máximo Activado*
+    `.trim(), m, { mentions: [user] })
+    await m.react('🗡️')
   } catch (e) {
-  return m.reply(`❌ ᴇʀʀᴏʀ ᴀʟ ᴇxᴘᴜʟsᴀʀ: ${e?.message || e}\n> ������� ʙᴏᴛ 🔱`)
+    await conn.reply(m.chat, '❌ Error al expulsar al usuario.', m)
+    await m.react('❌')
   }
 }
 
-handler.help = ['kick @usuario', 'kick (responde a un mensaje)']
+handler.command = ['kick', 'expulsar']
 handler.tags = ['group']
-handler.command = ['kick', 'ban', 'hechar']
-handler.admin = true
+handler.help = ['kick @usuario']
 handler.group = true
-handler.botAdmin = true
+handler.admin = true
 
 export default handler
