@@ -1,4 +1,5 @@
 import axios from 'axios'
+import moment from 'moment-timezone'
 
 let handler = async (m, { conn, text }) => {
   if (!text) {
@@ -17,6 +18,8 @@ let handler = async (m, { conn, text }) => {
     const res = await axios.get(`https://disease.sh/v3/covid-19/countries/${text}`)
     const data = res.data
 
+    const fecha = moment(data.updated).tz('America/Caracas').format('DD/MM/YYYY HH:mm:ss')
+
     const info = `
 🐉 GOHAN BEAST — COVID-19
 
@@ -25,7 +28,7 @@ let handler = async (m, { conn, text }) => {
 📈 Casos activos: ${data.active.toLocaleString()}
 💀 Muertes: ${data.deaths.toLocaleString()}
 🔄 Recuperados: ${data.recovered.toLocaleString()}
-📅 Última actualización: ${new Date(data.updated).toLocaleString()}
+📅 Última actualización: ${fecha} (Hora Venezuela)
 
 ⚡ Gohan Beast - Poder Máximo Activado
     `.trim()
