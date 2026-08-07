@@ -30,7 +30,7 @@
     "awesome-phonenumber": "^3.4.0",
     "axios": "^1.1.2",
     "acrcloud": "^1.4.0",
-    "cfonts": "^3.3.0",
+    "cfonts": "^3.3.1",
     "chalk": "^5.1.0",
     "cheerio": "npm:cheerio@1.0.0-rc.12",
     "colors": "1.4.0",
