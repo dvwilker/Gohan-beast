@@ -85,7 +85,9 @@ export async function yukiJadiBot(options) {
     generateHighQualityLinkPreview: true,
     defaultQueryTimeoutMs: undefined,
     keepAliveIntervalMs: 30000,
-    connectTimeoutMs: 60000
+    connectTimeoutMs: 60000,
+    syncFullHistory: false,
+    markOnlineOnConnect: false
   };
 
   let sock = makeWASocket(connectionOptions)
@@ -93,13 +95,13 @@ export async function yukiJadiBot(options) {
   let isInit = true
   let qrSent = false
   let codeSent = false
+  let notificacionEnviada = false
 
   async function connectionUpdate(update) {
     const { connection, lastDisconnect, isNewLogin, qr } = update
     
     if (isNewLogin) sock.isInit = false
     
-    // Manejar QR
     if (qr && isQR && !qrSent) {
       qrSent = true
       const qrImage = await qrcode.toBuffer(qr, { scale: 8 })
@@ -109,13 +111,9 @@ export async function yukiJadiBot(options) {
           caption: `
 🐉 *VINCULACIÓN POR QR GOHAN BEAST* 🐉
 
-👾 *Pasos para vincularte a Gohan:*
-1️⃣ Abre WhatsApp en tu teléfono  
-2️⃣ Pulsa ⋮ *Más opciones* → *Dispositivos vinculados*  
-3️⃣ Presiona *"Vincular un dispositivo"*  
-4️⃣ Escanea el código QR que se muestra arriba
+Escanea este QR con WhatsApp para vincular el subbot.
 
-⚡ *Gohan Beast - Poder Máximo Activado*
+⚡ Gohan Beast - Poder Máximo Activado
           `.trim()
         }, { quoted: m })
       } catch (e) {
@@ -124,32 +122,30 @@ export async function yukiJadiBot(options) {
       return
     }
     
-    // Manejar código de 8 dígitos
     if (isCode && !codeSent) {
       codeSent = true
       try {
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        
         let secret = await sock.requestPairingCode(userJid.split('@')[0])
         secret = secret.match(/.{1,4}/g)?.join("-") || secret
         
         await conn.sendMessage(m.chat, {
           text: `
-🐉 *VINCULACIÓN POR CÓDIGO DE 8 DÍGITOS* 🐉
+🐉 *CÓDIGO DE VINCULACIÓN* 🐉
 
-👾 *Pasos para vincularte a Gohan:*
-1️⃣ Abre WhatsApp en tu teléfono  
-2️⃣ Pulsa ⋮ *Más opciones* → *Dispositivos vinculados*  
-3️⃣ Presiona *"Vincular un dispositivo"*  
-4️⃣ Selecciona *"Con número"* e introduce el código:
+🔑 CODIGO: ${secret}
 
-🔑 *CÓDIGO:* ${secret}
+Abre WhatsApp → Dispositivos vinculados → Con número
+Introduce este código para vincular el subbot.
 
-⚡ *Gohan Beast - Poder Máximo Activado*
+⚡ Gohan Beast - Poder Máximo Activado
           `.trim()
         }, { quoted: m })
       } catch (e) {
         console.error('Error al generar código:', e)
         try {
-          await conn.reply(m.chat, '❌ Error al generar el código de vinculación. Intenta con .qr', m)
+          await conn.reply(m.chat, '❌ Error al generar el código. Usa .qr en su lugar.', m)
         } catch {}
       }
       return
@@ -174,9 +170,9 @@ export async function yukiJadiBot(options) {
       }
     }
     
-    if (connection === 'open') {
+    if (connection === 'open' && !notificacionEnviada) {
+      notificacionEnviada = true
       let userName = sock.authState.creds.me.name || 'Anónimo'
-      let userJid = sock.authState.creds.me.jid || `${path.basename(pathYukiJadiBot)}@s.whatsapp.net`
       
       console.log(chalk.green(`✅ Subbot conectado: ${userName} (${path.basename(pathYukiJadiBot)})`))
       
@@ -190,13 +186,13 @@ export async function yukiJadiBot(options) {
       try {
         await conn.sendMessage(m.chat, {
           text: `
-🐉 *¡NUEVO SUBBOT CONECTADO!* 🐉
+🐉 *SUBBOT CONECTADO* 🐉
 
-👤 *Usuario:* ${userName}
-📱 *Número:* ${path.basename(pathYukiJadiBot)}
-📅 *Fecha:* ${new Date().toLocaleString()}
+Usuario: ${userName}
+Numero: ${path.basename(pathYukiJadiBot)}
+Fecha: ${new Date().toLocaleString()}
 
-⚡ El subbot está listo para usar.
+El subbot esta listo.
           `.trim()
         }, { quoted: m })
       } catch (e) {
