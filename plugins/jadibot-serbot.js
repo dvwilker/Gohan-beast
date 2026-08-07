@@ -5,10 +5,7 @@ import fs from "fs"
 import path from "path"
 import pino from 'pino'
 import chalk from 'chalk'
-import util from 'util' 
 import * as ws from 'ws'
-const { child, spawn, exec } = await import('child_process')
-const { CONNECTING } = ws
 import { makeWASocket } from '../lib/simple.js'
 import { fileURLToPath } from 'url'
 
@@ -18,7 +15,7 @@ const __dirname = path.dirname(__filename)
 if (global.conns instanceof Array) console.log()
 else global.conns = []
 
-let handler = async (m, { conn, args, usedPrefix, command, isOwner }) => {
+let handler = async (m, { conn, args, usedPrefix, command }) => {
   let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
   let id = `${who.split`@`[0]}`
   let pathYukiJadiBot = path.join(`./${global.jadi || 'JadiBots'}`, id)
@@ -61,7 +58,6 @@ export default handler
 export async function yukiJadiBot(options) {
   let { pathYukiJadiBot, m, conn, args, usedPrefix, command, isCode, isQR } = options
   const userJid = m.sender
-  const userName = m.pushName || 'Usuario'
   
   const pathCreds = path.join(pathYukiJadiBot, "creds.json")
   
@@ -72,10 +68,9 @@ export async function yukiJadiBot(options) {
     return
   }
 
-  let { version, isLatest } = await fetchLatestBaileysVersion()
-  const msgRetry = (MessageRetryMap) => { }
+  let { version } = await fetchLatestBaileysVersion()
   const msgRetryCache = new NodeCache()
-  const { state, saveState, saveCreds } = await useMultiFileAuthState(pathYukiJadiBot)
+  const { state, saveCreds } = await useMultiFileAuthState(pathYukiJadiBot)
 
   const connectionOptions = {
     logger: pino({ level: "fatal" }),
@@ -84,11 +79,13 @@ export async function yukiJadiBot(options) {
       creds: state.creds, 
       keys: makeCacheableSignalKeyStore(state.keys, pino({level: 'silent'})) 
     },
-    msgRetry,
     msgRetryCache,
     browser: isCode ? ['Ubuntu', 'Chrome', '110.0.5585.95'] : ['Gohan Beast SubBot', 'Chrome', '2.0.0'],
     version: version,
-    generateHighQualityLinkPreview: true
+    generateHighQualityLinkPreview: true,
+    defaultQueryTimeoutMs: undefined,
+    keepAliveIntervalMs: 30000,
+    connectTimeoutMs: 60000
   };
 
   let sock = makeWASocket(connectionOptions)
@@ -106,9 +103,10 @@ export async function yukiJadiBot(options) {
     if (qr && isQR && !qrSent) {
       qrSent = true
       const qrImage = await qrcode.toBuffer(qr, { scale: 8 })
-      await conn.sendMessage(m.chat, { 
-        image: qrImage, 
-        caption: `
+      try {
+        await conn.sendMessage(m.chat, { 
+          image: qrImage, 
+          caption: `
 🐉 *VINCULACIÓN POR QR GOHAN BEAST* 🐉
 
 👾 *Pasos para vincularte a Gohan:*
@@ -118,8 +116,11 @@ export async function yukiJadiBot(options) {
 4️⃣ Escanea el código QR que se muestra arriba
 
 ⚡ *Gohan Beast - Poder Máximo Activado*
-        `.trim()
-      }, { quoted: m })
+          `.trim()
+        }, { quoted: m })
+      } catch (e) {
+        console.error('Error enviando QR:', e.message)
+      }
       return
     }
     
@@ -147,7 +148,9 @@ export async function yukiJadiBot(options) {
         }, { quoted: m })
       } catch (e) {
         console.error('Error al generar código:', e)
-        await conn.reply(m.chat, '❌ Error al generar el código de vinculación.', m)
+        try {
+          await conn.reply(m.chat, '❌ Error al generar el código de vinculación. Intenta con .qr', m)
+        } catch {}
       }
       return
     }
@@ -157,19 +160,19 @@ export async function yukiJadiBot(options) {
     if (connection === 'close') {
       if (reason === 428 || reason === 408 || reason === 500) {
         console.log(chalk.yellow(`🔄 Reconectando subbot: ${path.basename(pathYukiJadiBot)}`))
-        await creloadHandler(true).catch(console.error)
+        setTimeout(() => creloadHandler(true).catch(console.error), 5000)
       }
-      if (reason === 405 || reason === 401) {
+      if (reason === 405 || reason === 401 || reason === 403) {
         console.log(chalk.red(`❌ Sesión cerrada: ${path.basename(pathYukiJadiBot)}`))
-        fs.rmSync(pathYukiJadiBot, { recursive: true, force: true })
-      }
-      if (reason === 403) {
-        console.log(chalk.red(`🚫 Cuenta en soporte: ${path.basename(pathYukiJadiBot)}`))
-        fs.rmSync(pathYukiJadiBot, { recursive: true, force: true })
+        try {
+          fs.rmSync(pathYukiJadiBot, { recursive: true, force: true })
+        } catch {}
+        const index = global.conns.indexOf(sock)
+        if (index > -1) {
+          global.conns.splice(index, 1)
+        }
       }
     }
-    
-    if (global.db.data == null) loadDatabase()
     
     if (connection === 'open') {
       let userName = sock.authState.creds.me.name || 'Anónimo'
@@ -179,13 +182,11 @@ export async function yukiJadiBot(options) {
       
       sock.isInit = true
       
-      // Verificar que no esté duplicado
       const yaExiste = global.conns.some(c => c.user?.jid === sock.user?.jid)
       if (!yaExiste) {
         global.conns.push(sock)
       }
       
-      // NOTIFICAR AL DUEÑO QUE UN SUBBOT SE CONECTÓ
       try {
         await conn.sendMessage(m.chat, {
           text: `
@@ -206,11 +207,11 @@ export async function yukiJadiBot(options) {
     }
   }
 
-  let handler = await import('../handler.js')
+  let handlerMod = await import('../handler.js')
   let creloadHandler = async function (restatConn) {
     try {
       const Handler = await import(`../handler.js?update=${Date.now()}`).catch(console.error)
-      if (Object.keys(Handler || {}).length) handler = Handler
+      if (Object.keys(Handler || {}).length) handlerMod = Handler
     } catch (e) {
       console.error('Error recargando handler:', e)
     }
@@ -229,7 +230,7 @@ export async function yukiJadiBot(options) {
       sock.ev.off('creds.update', sock.credsUpdate)
     }
 
-    sock.handler = handler.handler.bind(sock)
+    sock.handler = handlerMod.handler.bind(sock)
     sock.connectionUpdate = connectionUpdate.bind(sock)
     sock.credsUpdate = saveCreds.bind(sock, true)
     sock.ev.on("messages.upsert", sock.handler)
@@ -240,10 +241,6 @@ export async function yukiJadiBot(options) {
   }
   
   creloadHandler(false)
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 async function joinChannels(conn) {
