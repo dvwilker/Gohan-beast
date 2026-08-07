@@ -26,7 +26,7 @@
   "license": "MIT-LICENSE",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@whiskeysockets/baileys": "npm:ourin-baileys@^0.8.2",
+    "@whiskeysockets/baileys": "github:this-xys/WaSocket",
     "awesome-phonenumber": "^3.4.0",
     "axios": "^1.1.2",
     "acrcloud": "^1.4.0",
