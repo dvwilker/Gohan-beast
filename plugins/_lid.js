@@ -1,54 +1,34 @@
-import { isLid, isLidConverted, resolveAnyLidToJid, normalizeToPhoneNumber } from '../lid/index.js'
-
 const handler = async (msg, { conn }) => {
   const chatId = msg.key.remoteJid
   const senderId = msg.key.participant || msg.key.remoteJid
 
-  // Reacción inicial
   await conn.sendMessage(chatId, {
     react: { text: '🛰️', key: msg.key }
   })
 
-  // Extraer el ID citado o usar el que envió el mensaje
   const context = msg.message?.extendedTextMessage?.contextInfo
   const citado = context?.participant
   const objetivo = citado || senderId
 
-  const esLID = isLid(objetivo)
-  const esLIDConvertido = isLidConverted(objetivo)
-  const tipo = esLID ? 'LID oculto (@lid)' : esLIDConvertido ? 'LID convertido (número fake)' : 'Número visible (@s.whatsapp.net)'
+  const esLID = objetivo.includes('@lid')
+  const tipo = esLID ? 'LID oculto (@lid)' : 'Número visible (@s.whatsapp.net)'
 
-  // Intentar resolver el número real
-  let numeroReal = normalizeToPhoneNumber(objetivo)
-  let resolvedJid = null
+  let numeroReal = objetivo.replace(/[^0-9]/g, '')
+  let nombre = 'Desconocido'
 
   try {
-    const groupMetadata = conn.chats?.[chatId]?.metadata
-    if (groupMetadata?.participants) {
-      resolvedJid = resolveAnyLidToJid(objetivo, groupMetadata.participants)
-      if (resolvedJid && resolvedJid !== objetivo) {
-        numeroReal = normalizeToPhoneNumber(resolvedJid)
-      }
-    }
+    nombre = await conn.getName(objetivo)
   } catch {}
 
-  const numero = objetivo.replace(/[^0-9]/g, '')
-  const numeroMostrar = numeroReal || numero
+  const mensaje = `
+🐉 GOHAN BEAST — INFORMACIÓN DE USUARIO
 
-  const mensaje = esLID || esLIDConvertido ? `
-📡 *Información del usuario detectado:*
-
-👤 *Identificador:* ${objetivo}
-📱 *Número real:* +${numeroMostrar}
+👤 *Nombre:* ${nombre}
+🆔 *ID:* ${objetivo}
+📱 *Número:* ${numeroReal}
 🔐 *Tipo de cuenta:* ${tipo}
-${resolvedJid && resolvedJid !== objetivo ? `✅ *Resuelto a:* ${resolvedJid}` : ''}
-⚠️ *Nota:* Este usuario tiene protección LID activa. El número puede no ser visible públicamente.
-`.trim() : `
-📡 *Información del usuario detectado:*
 
-👤 *Identificador:* ${objetivo}
-📱 *Número:* +${numeroMostrar}
-🔐 *Tipo de cuenta:* ${tipo}
+⚡ Gohan Beast - Poder Máximo Activado
 `.trim()
 
   await conn.sendMessage(chatId, {
@@ -56,7 +36,7 @@ ${resolvedJid && resolvedJid !== objetivo ? `✅ *Resuelto a:* ${resolvedJid}` :
   }, { quoted: msg })
 }
 
-handler.command = ['lid']
+handler.command = ['lid', 'info', 'userinfo']
 handler.group = true
 handler.private = false
 
