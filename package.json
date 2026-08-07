@@ -26,7 +26,7 @@
   "license": "MIT-LICENSE",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@whiskeysockets/baileys": "git@github.com:Andresv27728/baileys-beta.git",
+    "@whiskeysockets/baileys": "npm:ourin-baileys@^0.8.2",
     "awesome-phonenumber": "^3.4.0",
     "axios": "^1.1.2",
     "acrcloud": "^1.4.0",
@@ -45,7 +45,7 @@
     "google-it": "^1.6.4",
     "human-readable": "^0.2.1",
     "jsdom": "^20.0.1",
-    "jimp": "^1.6.0",
+    "jimp": "^1.6.1",
     "link-preview-js": "^3.0.0",
     "lodash": "latest",
     "lowdb": "^3.0.0",
