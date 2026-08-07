@@ -1,4 +1,9 @@
 import ws from 'ws'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 let handler = async (m, { conn }) => {
   let uniqueUsers = new Map()
@@ -41,13 +46,27 @@ let handler = async (m, { conn }) => {
     txt += `\n🌀 *No hay subbots conectados actualmente.*`
   }
 
-  await conn.reply(m.chat, txt.trim(), m, global.rcanal)
+  const imagePath = path.join(__dirname, '../lib/gohan.jpg')
+  let imageBuffer = null
+  if (fs.existsSync(imagePath)) {
+    imageBuffer = fs.readFileSync(imagePath)
+  }
+
+  if (imageBuffer) {
+    await conn.sendMessage(m.chat, {
+      image: imageBuffer,
+      caption: txt.trim()
+    }, { quoted: m })
+  } else {
+    await conn.reply(m.chat, txt.trim(), m, global.rcanal)
+  }
 }
 
 handler.command = ['listjadibot', 'bots']
 handler.help = ['bots']
 handler.tags = ['jadibot']
 handler.register = false
+
 export default handler
 
 function clockString(ms) {
