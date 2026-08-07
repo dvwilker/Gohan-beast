@@ -239,7 +239,7 @@ if (!isROwner && opts['self']) return
 if (opts['swonly'] && m.chat !== 'status@broadcast')  return
 if (typeof m.text !== 'string')
 m.text = ''
-// Funcion para setprimary By Wilker
+
 if (m.isGroup) {
   let chat = global.db.data.chats[m.chat];
   if (chat?.primaryBot && this?.user?.jid !== chat.primaryBot) {
@@ -270,16 +270,24 @@ const senderJid = m.sender
 const botJid = conn.user.jid
 const groupMetadata = m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}
 const participants = m.isGroup ? (groupMetadata.participants || []) : []
-const user = participants.find(p => p.id === senderLid || p.id === senderJid) || {}
-const bot = participants.find(p => p.id === botLid || p.id === botJid) || {}
-const isRAdmin = user?.admin === "superadmin"
-const isAdmin = isRAdmin || user?.admin === "admin"
-const isBotAdmin = !!bot?.admin
+
+const user = participants.find(p => {
+  const pid = p.id || p.jid || ''
+  return pid === senderLid || pid === senderJid
+}) || {}
+
+const bot = participants.find(p => {
+  const pid = p.id || p.jid || ''
+  return pid === botLid || pid === botJid
+}) || {}
+
+const isRAdmin = user?.admin === "superadmin" || user?.admin === true
+const isAdmin = isRAdmin || user?.admin === "admin" || user?.admin === true
+const isBotAdmin = bot?.admin === "admin" || bot?.admin === "superadmin" || bot?.admin === true
 
 const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), './plugins')
 
-// Mover la declaración de usedPrefix aquí para que siempre esté disponible en el ámbito del handler
-let usedPrefix = ''; // Inicializarlo aquí
+let usedPrefix = '';
 
 for (let name in global.plugins) {
 let plugin = global.plugins[name]
@@ -339,7 +347,7 @@ continue
 }
 if (typeof plugin !== 'function')
 continue
-if ((usedPrefix = (match[0] || '')[0])) { // usedPrefix ahora se asigna, no se declara aquí
+if ((usedPrefix = (match[0] || '')[0])) {
 let noPrefix = m.text.replace(usedPrefix, '')
 let [command, ...args] = noPrefix.trim().split` `.filter(v => v)
 args = args || []
@@ -475,8 +483,6 @@ text = text.replace(new RegExp(key, 'g'), 'Administrador')
 m.reply(text)
 }
 } finally {
-// El bloque finally siempre se ejecuta, incluso si usedPrefix no ha sido definido
-// Asegúrate de que cualquier uso de usedPrefix aquí sea seguro o maneje el caso en que no exista.
 if (typeof plugin.after === 'function') {
 try {
 await plugin.after.call(this, m, extra)
@@ -486,16 +492,12 @@ console.error(e)
 if (m.coin)
 conn.reply(m.chat, `❮✦❯ Utilizaste ${+m.coin} ${moneda}`, m)
 }
-break // Este break debería estar fuera del finally si quieres que el loop siga
-// O sea, si un plugin lanza un error, break termina el loop, si no, el loop continua.
-// Si el break está dentro del if ((usedPrefix = (match[0] || '')[0])), entonces solo se rompe si se encuentra un comando.
-// Considerando que el error se da en el finally, la lógica parece ser que el loop de plugins no siempre se rompe.
-}} // Este cierre de llave pertenece al for...in global.plugins
+break
+}}
 
 } catch (e) {
 console.error(e)
 } finally {
-// usedPrefix está disponible aquí porque se declaró más arriba en el scope del handler
 if (opts['queque'] && m.text) {
 const quequeIndex = this.msgqueque.indexOf(m.id || m.key.id)
 if (quequeIndex !== -1)
@@ -543,10 +545,7 @@ stat.lastSuccess = now
 try {
 if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
 } catch (e) { 
-console.log(m, m.quoted, e)} // <<< Esta es la línea 338, aquí 'usedPrefix' NO se usa directamente,
-                                // pero si 'print.js' o 'm' (con su propiedad 'usedPrefix')
-                                // la causan, entonces el problema es en el scope de esas.
-                                // La solución de mover 'let usedPrefix' resolverá esto.
+console.log(m, m.quoted, e)}
 let settingsREAD = global.db.data.settings[this.user.jid] || {}  
 if (opts['autoread']) await this.readMessages([m.key])
 
@@ -557,7 +556,7 @@ if (!m.fromMe) return this.sendMessage(m.chat, { react: { text: emot, key: m.key
 function pickRandom(list) { return list[Math.floor(Math.random() * list.length)]}
 }}
 
-global.dfail = (type, m, conn, usedPrefix, command) => { // 'conn' es el tercer argumento
+global.dfail = (type, m, conn, usedPrefix, command) => {
 
     let edadaleatoria = ['10', '28', '20', '40', '18', '21', '15', '11', '9', '17', '25'].getRandom()
     let user2 = m.pushName || 'Anónimo'
