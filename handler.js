@@ -423,7 +423,7 @@ continue
 } else if (plugin.botAdmin && !isBotAdmin) { 
 fail('botAdmin', m, this, usedPrefix, command) 
 continue
-} else if (plugin.admin && !isAdmin) { 
+} else if (plugin.admin && !isAdmin && !isOwner) { 
 fail('admin', m, this, usedPrefix, command) 
 continue
 }
@@ -569,7 +569,7 @@ global.dfail = (type, m, conn, usedPrefix, command) => {
     premium: '💎 Solo usuarios Premium pueden usar este comando.',
     group: '「✧」 Este comando es sólo para grupos.',
     private: '🔒 Solo en Chat Privado puedes usar este comando.',
-    admin: '⚔️ Solo los Admins del Grupo pueden usar este comando.',
+    admin: '❌ Solo admins pueden activar o desactivar funciones.',
     botAdmin: 'El bot debe ser Admin para ejecutar esto.',
     unreg: '> 🔰 Debes estar Registrado para usar este comando.\n\n Ejemplo : #reg Wilker.15',
     restrict: '⛔ Esta función está deshabilitada.'
