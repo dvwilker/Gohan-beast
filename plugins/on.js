@@ -1,21 +1,9 @@
-//--> Hecho por Ado-rgb (github.com/Ado-rgb)
-// •|• No quites créditos..
 import fetch from 'node-fetch'
 
 let linkRegex = /chat\.whatsapp\.com\/[0-9A-Za-z]{20,24}/i
 let linkRegex1 = /whatsapp\.com\/channel\/[0-9A-Za-z]{20,24}/i
 
-async function isAdminOrOwner(m, conn) {
-  try {
-    const groupMetadata = await conn.groupMetadata(m.chat)
-    const participant = groupMetadata.participants.find(p => p.id === m.sender)
-    return participant?.admin || m.fromMe
-  } catch {
-    return false
-  }
-}
-
-const handler = async (m, { conn, command, args, isAdmin, isOwner }) => {
+const handler = async (m, { conn, command, args }) => {
   if (!m.isGroup) return m.reply('🔒 Solo funciona en grupos.')
 
   if (!global.db.data.chats[m.chat]) global.db.data.chats[m.chat] = {}
@@ -23,16 +11,22 @@ const handler = async (m, { conn, command, args, isAdmin, isOwner }) => {
   const type = (args[0] || '').toLowerCase()
   const enable = command === 'on'
 
+  const groupMetadata = await conn.groupMetadata(m.chat)
+  const participant = groupMetadata.participants.find(p => p.id === m.sender)
+  const isAdmin = participant?.admin === 'admin' || participant?.admin === 'superadmin' || participant?.admin === true
+
+  if (!isAdmin && !m.fromMe) {
+    return m.reply('❌ Solo admins pueden activar o desactivar funciones.')
+  }
+
   if (!['antilink', 'antiarabe', 'modoadmin'].includes(type)) {
     return m.reply(`✳️ Usa:\n*.on antilink* / *.off antilink*\n*.on antiarabe* / *.off antiarabe*\n*.on modoadmin* / *.off modoadmin*`)
   }
 
-  if (!isAdmin) return m.reply('❌ Solo admins (no owner) pueden activar o desactivar funciones.')
-
   if (type === 'antilink') {
     chat.antilink = enable
     if(!chat.antilinkWarns) chat.antilinkWarns = {}
-    if(!enable) chat.antilinkWarns = {} // resetea advertencias si se apaga antilink
+    if(!enable) chat.antilinkWarns = {}
     return m.reply(`✅ Antilink ${enable ? 'activado' : 'desactivado'}.`)
   }
 
@@ -58,9 +52,20 @@ handler.before = async (m, { conn }) => {
   if (!global.db.data.chats[m.chat]) global.db.data.chats[m.chat] = {}
   const chat = global.db.data.chats[m.chat]
 
+  const groupMetadata = await conn.groupMetadata(m.chat)
+  const participants = groupMetadata.participants || []
+
+  const isUserAdmin = participants.some(p => {
+    const pid = p.id || p.jid || ''
+    return pid === m.sender && (p.admin === 'admin' || p.admin === 'superadmin' || p.admin === true)
+  })
+
+  const isBotAdmin = participants.some(p => {
+    const pid = p.id || p.jid || ''
+    return pid === conn.user.jid && (p.admin === 'admin' || p.admin === 'superadmin' || p.admin === true)
+  })
+
   if (chat.modoadmin) {
-    const groupMetadata = await conn.groupMetadata(m.chat)
-    const isUserAdmin = groupMetadata.participants.find(p => p.id === m.sender)?.admin
     if (!isUserAdmin && !m.fromMe) return
   }
 
@@ -72,16 +77,14 @@ handler.before = async (m, { conn }) => {
     const arabicPrefixes = ['212', '20', '971', '965', '966', '974', '973', '962']
     const isArab = arabicPrefixes.some(prefix => number.startsWith(prefix))
 
-    if (isArab) {
-      await conn.sendMessage(m.chat, { text: `Este pndj ${newJid} será expulsado, no queremos العرب aca, adiosito. [ Anti Arabe Activado ]` })
+    if (isArab && isBotAdmin) {
+      await conn.sendMessage(m.chat, { text: `🚫 @${newJid.split('@')[0]} será expulsado. [Anti Arabe Activado]`, mentions: [newJid] })
       await conn.groupParticipantsUpdate(m.chat, [newJid], 'remove')
       return true
     }
   }
 
   if (chat.antilink) {
-    const groupMetadata = await conn.groupMetadata(m.chat)
-    const isUserAdmin = groupMetadata.participants.find(p => p.id === m.sender)?.admin
     const text = m?.text || ''
 
     if (!isUserAdmin && (linkRegex.test(text) || linkRegex1.test(text))) {
@@ -92,7 +95,7 @@ handler.before = async (m, { conn }) => {
       try {
         const ownGroupLink = `https://chat.whatsapp.com/${await conn.groupInviteCode(m.chat)}`
         if (text.includes(ownGroupLink)) return
-      } catch { }
+      } catch {}
 
       if (!chat.antilinkWarns) chat.antilinkWarns = {}
       if (!chat.antilinkWarns[m.sender]) chat.antilinkWarns[m.sender] = 0
@@ -100,10 +103,9 @@ handler.before = async (m, { conn }) => {
       chat.antilinkWarns[m.sender]++
 
       if (chat.antilinkWarns[m.sender] < 3) {
-        // solo elimina el mensaje con link y manda advertencia
         try {
           await conn.sendMessage(m.chat, {
-            text: `🚫 Hey ${userTag}, no se permiten links aquí. Esta es tu advertencia ${chat.antilinkWarns[m.sender]}/3.`,
+            text: `🚫 Hey ${userTag}, no se permiten links aquí. Advertencia ${chat.antilinkWarns[m.sender]}/3.`,
             mentions: [m.sender]
           }, { quoted: m })
 
@@ -122,33 +124,37 @@ handler.before = async (m, { conn }) => {
           }, { quoted: m })
         }
       } else {
-        // tercera advertencia: elimina y expulsa
-        try {
-          await conn.sendMessage(m.chat, {
-            text: `🚫 ${userTag} alcanzó 3 advertencias por enviar links. Ahora serás expulsado.`,
-            mentions: [m.sender]
-          }, { quoted: m })
+        if (isBotAdmin) {
+          try {
+            await conn.sendMessage(m.chat, {
+              text: `🚫 ${userTag} alcanzó 3 advertencias. Serás expulsado.`,
+              mentions: [m.sender]
+            }, { quoted: m })
 
-          await conn.sendMessage(m.chat, {
-            delete: {
-              remoteJid: m.chat,
-              fromMe: false,
-              id: msgID,
-              participant: delet
-            }
-          })
+            await conn.sendMessage(m.chat, {
+              delete: {
+                remoteJid: m.chat,
+                fromMe: false,
+                id: msgID,
+                participant: delet
+              }
+            })
 
-          await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-
-          chat.antilinkWarns[m.sender] = 0
-        } catch {
+            await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
+            chat.antilinkWarns[m.sender] = 0
+          } catch {
+            await conn.sendMessage(m.chat, {
+              text: `⚠️ No pude expulsar a ${userTag}.`,
+              mentions: [m.sender]
+            }, { quoted: m })
+          }
+        } else {
           await conn.sendMessage(m.chat, {
-            text: `⚠️ No pude expulsar a ${userTag}. Puede que no tenga permisos.`,
+            text: `⚠️ No puedo expulsar, necesito ser admin.`,
             mentions: [m.sender]
           }, { quoted: m })
         }
       }
-
       return true
     }
   }
