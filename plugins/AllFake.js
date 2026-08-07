@@ -1,12 +1,13 @@
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export async function before(m, { conn }) {
   try {
-
     let nombreBot = global.namebot || 'Bot'
-    let bannerFinal = 'https://h.uguu.se/CMVueGvf.jpg'
-
+    let bannerFinal = null
 
     const botActual = conn.user?.jid?.split('@')[0].replace(/\D/g, '')
     const configPath = path.join('./JadiBots', botActual, 'config.json')
@@ -21,10 +22,14 @@ export async function before(m, { conn }) {
       }
     }
 
+    let imagenLocal = null
+    const imagePath = path.join(__dirname, 'lib', 'gohan.jpg')
+    if (fs.existsSync(imagePath)) {
+      imagenLocal = fs.readFileSync(imagePath)
+    }
 
     const canales = [global.idcanal, global.idcanal2]
     const newsletterJidRandom = canales[Math.floor(Math.random() * canales.length)]
-
 
     global.rcanal = {
       contextInfo: {
@@ -38,8 +43,8 @@ export async function before(m, { conn }) {
         externalAdReply: {
           title: nombreBot,
           body: global.author,
-          thumbnailUrl: bannerFinal,
-          sourceUrl: 'myapiadonix.vercel.app',
+          thumbnail: imagenLocal,
+          sourceUrl: 'api-gohan-v1.onrender.com',
           mediaType: 1,
           renderLargerThumbnail: false
         }
