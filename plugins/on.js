@@ -3,21 +3,18 @@ import fetch from 'node-fetch'
 let linkRegex = /chat\.whatsapp\.com\/[0-9A-Za-z]{20,24}/i
 let linkRegex1 = /whatsapp\.com\/channel\/[0-9A-Za-z]{20,24}/i
 
-const handler = async (m, { conn, command, args }) => {
+const handler = async (m, { conn, command, args, isAdmin, isOwner }) => {
   if (!m.isGroup) return m.reply('🔒 Solo funciona en grupos.')
+
+  // ✅ Usar isAdmin del handler (ya arreglado)
+  if (!isAdmin && !isOwner) {
+    return m.reply('❌ Solo admins pueden activar o desactivar funciones.')
+  }
 
   if (!global.db.data.chats[m.chat]) global.db.data.chats[m.chat] = {}
   const chat = global.db.data.chats[m.chat]
   const type = (args[0] || '').toLowerCase()
   const enable = command === 'on'
-
-  const groupMetadata = await conn.groupMetadata(m.chat)
-  const participant = groupMetadata.participants.find(p => p.id === m.sender)
-  const isAdmin = participant?.admin === 'admin' || participant?.admin === 'superadmin' || participant?.admin === true
-
-  if (!isAdmin && !m.fromMe) {
-    return m.reply('❌ Solo admins pueden activar o desactivar funciones.')
-  }
 
   if (!['antilink', 'antiarabe', 'modoadmin'].includes(type)) {
     return m.reply(`✳️ Usa:\n*.on antilink* / *.off antilink*\n*.on antiarabe* / *.off antiarabe*\n*.on modoadmin* / *.off modoadmin*`)
