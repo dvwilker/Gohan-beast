@@ -77,11 +77,12 @@ export async function yukiJadiBot(options) {
   
   const pathCreds = path.join(pathYukiJadiBot, "creds.json")
   
-  try {
-    args[0] && args[0] != undefined ? fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(Buffer.from(args[0], "base64").toString("utf-8")), null, '\t')) : ""
-  } catch {
-    conn.reply(m.chat, `Uso correcto: ${usedPrefix + command} <numero>`, m)
-    return
+  if (args[0] && args[0] != undefined) {
+    try {
+      fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(Buffer.from(args[0], "base64").toString("utf-8")), null, '\t'))
+    } catch (e) {
+      console.error('Error al escribir creds:', e)
+    }
   }
 
   let { version } = await fetchLatestBaileysVersion()
