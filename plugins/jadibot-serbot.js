@@ -16,23 +16,22 @@ if (global.conns instanceof Array) console.log()
 else global.conns = []
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
-  // Verificar si se proporcionó un número
   if (!args[0]) {
-    return m.reply(`🐉 *GOHAN BEAST - SUBBOT* 🐉
+    return m.reply(`🐉 GOHAN BEAST - SUBBOT
 
-📌 Uso correcto:
-${usedPrefix + command} <número>
+Uso correcto:
+${usedPrefix + command} <numero>
 
-📌 Ejemplo:
+Ejemplo:
 ${usedPrefix + command} 584125877491
 
-⚡ El número debe ser sin espacios, sin + y sin @.
-⚡ El subbot se vinculará a ese número.`)
+El numero debe ser sin espacios, sin + y sin @.
+El subbot se vinculara a ese numero.`)
   }
 
   let numero = args[0].replace(/[^0-9]/g, '')
   if (numero.length < 10) {
-    return m.reply(`❌ Número inválido. Debe tener al menos 10 dígitos.`)
+    return m.reply(`Numero invalido. Debe tener al menos 10 digitos.`)
   }
 
   let pathYukiJadiBot = path.join(`./${global.jadi || 'JadiBots'}`, numero)
@@ -45,7 +44,7 @@ ${usedPrefix + command} 584125877491
   const subBotsCount = subBots.length
   
   if (subBotsCount >= 30) {
-    return m.reply(`🐉 No hay espacios disponibles para más Sub-Bots. Límite: 30`)
+    return m.reply(`No hay espacios disponibles para mas Sub-Bots. Limite: 30`)
   }
 
   const isCode = command === 'code' || args.includes('code')
@@ -81,7 +80,7 @@ export async function yukiJadiBot(options) {
   try {
     args[0] && args[0] != undefined ? fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(Buffer.from(args[0], "base64").toString("utf-8")), null, '\t')) : ""
   } catch {
-    conn.reply(m.chat, `🐉 Uso correcto: ${usedPrefix + command} <número>`, m)
+    conn.reply(m.chat, `Uso correcto: ${usedPrefix + command} <numero>`, m)
     return
   }
 
@@ -127,13 +126,13 @@ export async function yukiJadiBot(options) {
         await conn.sendMessage(m.chat, { 
           image: qrImage, 
           caption: `
-🐉 *VINCULACIÓN POR QR GOHAN BEAST* 🐉
+VINCULACION POR QR GOHAN BEAST
 
 Escanea este QR con WhatsApp para vincular el subbot.
 
-📱 Número: ${numero}
+Numero: ${numero}
 
-⚡ Gohan Beast - Poder Máximo Activado
+Gohan Beast - Poder Maximo Activado
           `.trim()
         }, { quoted: m })
       } catch (e) {
@@ -152,22 +151,22 @@ Escanea este QR con WhatsApp para vincular el subbot.
         
         await conn.sendMessage(m.chat, {
           text: `
-🐉 *CÓDIGO DE VINCULACIÓN* 🐉
+CODIGO DE VINCULACION
 
-🔑 CODIGO: ${secret}
+CODIGO: ${secret}
 
-📱 Número: ${numero}
+Numero: ${numero}
 
-Abre WhatsApp → Dispositivos vinculados → Con número
-Introduce este código para vincular el subbot.
+Abre WhatsApp -> Dispositivos vinculados -> Con numero
+Introduce este codigo para vincular el subbot.
 
-⚡ Gohan Beast - Poder Máximo Activado
+Gohan Beast - Poder Maximo Activado
           `.trim()
         }, { quoted: m })
       } catch (e) {
-        console.error('Error al generar código:', e)
+        console.error('Error al generar codigo:', e)
         try {
-          await conn.reply(m.chat, `❌ Error al generar el código para ${numero}. Usa .qr en su lugar.`, m)
+          await conn.reply(m.chat, `Error al generar el codigo para ${numero}. Usa .qr en su lugar.`, m)
         } catch {}
       }
       return
@@ -177,11 +176,11 @@ Introduce este código para vincular el subbot.
     
     if (connection === 'close') {
       if (reason === 428 || reason === 408 || reason === 500) {
-        console.log(chalk.yellow(`🔄 Reconectando subbot: ${path.basename(pathYukiJadiBot)}`))
+        console.log(chalk.yellow(`Reconectando subbot: ${path.basename(pathYukiJadiBot)}`))
         setTimeout(() => creloadHandler(true).catch(console.error), 5000)
       }
       if (reason === 405 || reason === 401 || reason === 403) {
-        console.log(chalk.red(`❌ Sesión cerrada: ${path.basename(pathYukiJadiBot)}`))
+        console.log(chalk.red(`Sesion cerrada: ${path.basename(pathYukiJadiBot)}`))
         try {
           fs.rmSync(pathYukiJadiBot, { recursive: true, force: true })
         } catch {}
@@ -194,9 +193,9 @@ Introduce este código para vincular el subbot.
     
     if (connection === 'open' && !notificacionEnviada) {
       notificacionEnviada = true
-      let userName = sock.authState.creds.me.name || 'Anónimo'
+      let userName = sock.authState.creds.me.name || 'Anonimo'
       
-      console.log(chalk.green(`✅ Subbot conectado: ${userName} (${path.basename(pathYukiJadiBot)})`))
+      console.log(chalk.green(`Subbot conectado: ${userName} (${path.basename(pathYukiJadiBot)})`))
       
       sock.isInit = true
       
@@ -208,7 +207,7 @@ Introduce este código para vincular el subbot.
       try {
         await conn.sendMessage(m.chat, {
           text: `
-🐉 *SUBBOT CONECTADO* 🐉
+SUBBOT CONECTADO
 
 Usuario: ${userName}
 Numero: ${path.basename(pathYukiJadiBot)}
