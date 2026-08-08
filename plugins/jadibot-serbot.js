@@ -16,9 +16,26 @@ if (global.conns instanceof Array) console.log()
 else global.conns = []
 
 let handler = async (m, { conn, args, usedPrefix, command }) => {
-  let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
-  let id = `${who.split`@`[0]}`
-  let pathYukiJadiBot = path.join(`./${global.jadi || 'JadiBots'}`, id)
+  // Verificar si se proporcionó un número
+  if (!args[0]) {
+    return m.reply(`🐉 *GOHAN BEAST - SUBBOT* 🐉
+
+📌 Uso correcto:
+${usedPrefix + command} <número>
+
+📌 Ejemplo:
+${usedPrefix + command} 584125877491
+
+⚡ El número debe ser sin espacios, sin + y sin @.
+⚡ El subbot se vinculará a ese número.`)
+  }
+
+  let numero = args[0].replace(/[^0-9]/g, '')
+  if (numero.length < 10) {
+    return m.reply(`❌ Número inválido. Debe tener al menos 10 dígitos.`)
+  }
+
+  let pathYukiJadiBot = path.join(`./${global.jadi || 'JadiBots'}`, numero)
   
   if (!fs.existsSync(pathYukiJadiBot)){
     fs.mkdirSync(pathYukiJadiBot, { recursive: true })
@@ -43,7 +60,8 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
     command: command,
     isCode: isCode,
     isQR: isQR,
-    fromCommand: true
+    fromCommand: true,
+    numero: numero
   }
   
   await yukiJadiBot(options)
@@ -56,15 +74,14 @@ handler.command = ['qr', 'code']
 export default handler 
 
 export async function yukiJadiBot(options) {
-  let { pathYukiJadiBot, m, conn, args, usedPrefix, command, isCode, isQR } = options
-  const userJid = m.sender
+  let { pathYukiJadiBot, m, conn, args, usedPrefix, command, isCode, isQR, numero } = options
   
   const pathCreds = path.join(pathYukiJadiBot, "creds.json")
   
   try {
     args[0] && args[0] != undefined ? fs.writeFileSync(pathCreds, JSON.stringify(JSON.parse(Buffer.from(args[0], "base64").toString("utf-8")), null, '\t')) : ""
   } catch {
-    conn.reply(m.chat, `🐉 Uso correcto: ${usedPrefix + command}`, m)
+    conn.reply(m.chat, `🐉 Uso correcto: ${usedPrefix + command} <número>`, m)
     return
   }
 
@@ -87,7 +104,8 @@ export async function yukiJadiBot(options) {
     keepAliveIntervalMs: 30000,
     connectTimeoutMs: 60000,
     syncFullHistory: false,
-    markOnlineOnConnect: false
+    markOnlineOnConnect: false,
+    patchMessageBeforeSending: false
   };
 
   let sock = makeWASocket(connectionOptions)
@@ -113,6 +131,8 @@ export async function yukiJadiBot(options) {
 
 Escanea este QR con WhatsApp para vincular el subbot.
 
+📱 Número: ${numero}
+
 ⚡ Gohan Beast - Poder Máximo Activado
           `.trim()
         }, { quoted: m })
@@ -125,9 +145,9 @@ Escanea este QR con WhatsApp para vincular el subbot.
     if (isCode && !codeSent) {
       codeSent = true
       try {
-        await new Promise(resolve => setTimeout(resolve, 2000))
+        await new Promise(resolve => setTimeout(resolve, 3000))
         
-        let secret = await sock.requestPairingCode(userJid.split('@')[0])
+        let secret = await sock.requestPairingCode(numero)
         secret = secret.match(/.{1,4}/g)?.join("-") || secret
         
         await conn.sendMessage(m.chat, {
@@ -135,6 +155,8 @@ Escanea este QR con WhatsApp para vincular el subbot.
 🐉 *CÓDIGO DE VINCULACIÓN* 🐉
 
 🔑 CODIGO: ${secret}
+
+📱 Número: ${numero}
 
 Abre WhatsApp → Dispositivos vinculados → Con número
 Introduce este código para vincular el subbot.
@@ -145,7 +167,7 @@ Introduce este código para vincular el subbot.
       } catch (e) {
         console.error('Error al generar código:', e)
         try {
-          await conn.reply(m.chat, '❌ Error al generar el código. Usa .qr en su lugar.', m)
+          await conn.reply(m.chat, `❌ Error al generar el código para ${numero}. Usa .qr en su lugar.`, m)
         } catch {}
       }
       return
